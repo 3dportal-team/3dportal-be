@@ -1,0 +1,24 @@
+debug: ${SPRING_DEBUG:false}
+server:
+  port: ${PAYMENT_SERVICE_PORT:8082}
+  forward-headers-strategy: framework
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+    url: ${POSTGRES_URL}?currentSchema=${POSTGRES_PAYMENT_SCHEMA}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    liquibase:
+      enabled: true
+      change-log: classpath:db/changelog/db.changelog-master-postgres.xml
+      default-schema: ${POSTGRES_PAYMENT_SCHEMA:payment_service_schema}
+
+yookassa:
+  api:
+    uri: ${YOOKASSA_API_URI:https://api.yookassa.ru/v3/}
+    shop:
+      id: ${YOOKASSA_SHOP_ID}
+    secret-key: ${YOOKASSA_API_SECRET}
+

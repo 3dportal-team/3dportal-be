@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="7" author="Diana.Monzhosova">
+        <addColumn tableName="model_file">
+            <column name="price_value" type="float" remarks="Текущая цена"/>
+            <column name="price_currency" type="VARCHAR(3)" remarks="Код валюты ценника"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="8" author="Diana.Monzhosova">
+        <createTable tableName="order_batch" remarks="Корзина заказа">
+            <column name="id" type="BIGINT" autoIncrement="true" remarks="Идентификатор">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_order_batch"/>
+            </column>
+            <column name="created_at" type="datetime" remarks="Время создания "/>
+            <column name="last_modified_at" type="datetime" remarks="Время последнего редактирования"/>
+            <column name="last_modifier_id" type="bigint" remarks="Идентификатор пользователя, редактировавшего корзину заказа последним">
+                <constraints foreignKeyName="fk_order_batch_last_modifier_id" references="portal_user(id)"/>
+            </column>
+            <column name="creator_id" type="bigint" remarks="Идентификатор пользователя, создавшего корзину заказа">
+                <constraints foreignKeyName="fk_order_batch_creator_id" references="portal_user(id)"/>
+            </column>
+            <column name="status" type="VARCHAR(10)" remarks="Статус корзины"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="9" author="Diana.Monzhosova">
+        <createTable tableName="order_batch_item" remarks="Элементы корзины заказа">
+            <column name="model_file_id" type="bigint" remarks="Идентификатор модели">
+                <constraints nullable="false" foreignKeyName="fk_order_batch_model_file_id" references="model_file(id)"/>
+            </column>
+            <column name="order_id" type="bigint" remarks="Идентификатор корзины заказа">
+                <constraints nullable="false" foreignKeyName="fk_order_batch_item_order_id" references="order_batch(id)"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="order_batch_item"
+                       columnNames="order_id, model_file_id"
+                       constraintName="pk_order_batch_item"/>
+    </changeSet>
+
+    <changeSet id="10" author="Diana.Monzhosova">
+        <modifyDataType tableName="portal_user" columnName="user_role" newDataType="VARCHAR(10)"/>
+    </changeSet>
+</databaseChangeLog>

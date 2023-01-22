@@ -1,0 +1,87 @@
+version: '3.4'
+services:
+  3dportal-postgres:
+    image: postgres:13
+    container_name: 3dportal-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    command: postgres -c 'config_file=/etc/postgresql/postgresql.conf'
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+    volumes:
+      - ./docker/db-postgres/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./docker/db-postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - ${POSTGRES_PORT}:5432
+    networks:
+      - net
+
+  3dportal-main-service:
+    image: 3dportal-main-service:${DOCKER_TAG}
+    container_name: 3dportal-main-service
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      - 3dportal-gateway-api
+      - 3dportal-postgres
+    ports:
+      - ${MAIN_SERVICE_PORT}:${MAIN_SERVICE_PORT}
+    networks:
+      - net
+
+  3dportal-yookassa-payment-service:
+    image: 3dportal-yookassa-payment-service:${DOCKER_TAG}
+    container_name: 3dportal-yookassa-payment-service
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      - 3dportal-gateway-api
+      - 3dportal-postgres
+    ports:
+      - ${PAYMENT_SERVICE_PORT}:${PAYMENT_SERVICE_PORT}
+    networks:
+      - net
+
+  3dportal-gateway-api:
+    image: 3dportal-gateway-api:${DOCKER_TAG}
+    container_name: 3dportal-gateway-api
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - ${GATEWAY_API_PORT}:${GATEWAY_API_PORT}
+    networks:
+      - net
+
+  3dportal_redis:
+    image: redis:7.0
+    container_name: 3dportal-redis
+    restart: unless-stopped
+    command: >
+      --requirepass ${REDIS_PASSWORD}
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    env_file:
+      - .env
+    environment:
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+    volumes:
+      - 3dportal-redis:/data
+    networks:
+      - net
+
+volumes:
+  3dportal-postgres-data:
+  3dportal-redis:
+
+networks:
+  net:
+    name: network

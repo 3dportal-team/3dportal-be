@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="13" author="Diana.Monzhosova">
+        <addColumn tableName="model_file">
+            <column name="created_at" type="datetime" remarks="Время создания "/>
+            <column name="last_modified_at" type="datetime" remarks="Время последнего редактирования"/>
+            <column name="last_modifier_id" type="bigint" remarks="Идентификатор пользователя, редактировавшего корзину заказа последним">
+                <constraints foreignKeyName="fk_model_file_last_modifier_id" references="portal_user(id)"/>
+            </column>
+            <column name="creator_id" type="bigint" remarks="Идентификатор пользователя, создавшего корзину заказа">
+                <constraints foreignKeyName="fk_model_file_creator_id" references="portal_user(id)"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="14" author="Diana.Monzhosova">
+        <dropColumn tableName="model_file" columnName="upload_date"/>
+        <dropColumn tableName="model_file" columnName="last_modified"/>
+    </changeSet>
+</databaseChangeLog>

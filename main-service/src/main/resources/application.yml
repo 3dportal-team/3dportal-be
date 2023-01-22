@@ -1,0 +1,53 @@
+debug: ${SPRING_DEBUG:false}
+server:
+  port: ${MAIN_SERVICE_PORT:8081}
+  forward-headers-strategy: framework
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+    url: ${POSTGRES_URL}?currentSchema=${POSTGRES_MAIN_SCHEMA}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    liquibase:
+      enabled: true
+      change-log: classpath:db/changelog/db.changelog-master-postgres.xml
+      default-schema: ${POSTGRES_MAIN_SCHEMA:main_service_schema}
+
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
+    lettuce:
+      pool:
+        max-active: 100
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  servlet:
+    multipart:
+      max-file-size: ${MULTIPART_MAX_FILE_SIZE}
+      max-request-size: ${MULTIPART_MAX_REQUEST_SIZE}
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher # TODO нужно ли это?
+  api-docs:
+    path: /docs # TODO нужно ли это?
+
+vk:
+  cloud:
+    bucket:
+      access-key: spA1ig32PcvZMzKh4PUDD # TODO перенести в .env
+      secret-key: gnWFeVuPZWmA9uvkimdZBdmh9fqpWPeZJBXZ9ztRRP
+      name: diploma-3dmodels
+      region: ru-msk
+      hotbox-url: https://hb.bizmrg.com/
+    account:
+      name: diploma-user
+      access-key: 6SGfjbMY7yWQcC8g2KtpfG
+      secret-key: effijxyh3DjkY3fzaAQDDiHx9tfXNaFB3YbhcdqAcMQY

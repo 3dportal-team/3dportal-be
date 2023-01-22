@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="2" author="Diana.Monzhosova">
+        <createTable tableName="payment" remarks="Объект платежа в системе ЮКасса">
+            <column name="id" type="BIGINT" autoIncrement="true" remarks="Идентификатор">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_payment"/>
+            </column>
+            <column name="status" type="VARCHAR(19)"/>
+            <column name="description" type="VARCHAR(128)"/>
+            <column name="amount_currency" type="VARCHAR(2)"/>
+            <column name="amount_value" type="FLOAT"/>
+            <column name="expires_at" type="DATETIME"/>
+            <column name="income_currency" type="VARCHAR(2)"/>
+            <column name="income_value" type="VARCHAR(2)"/>
+            <column name="paid" type="BOOLEAN"/>
+            <column name="refundable" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

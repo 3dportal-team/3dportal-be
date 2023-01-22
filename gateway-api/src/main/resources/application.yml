@@ -1,0 +1,19 @@
+server:
+  port: ${GATEWAY_API_PORT}
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: ${MAIN_SERVICE_NAME}
+          uri: http://${MAIN_SERVICE_HOST}:${MAIN_SERVICE_PORT}/
+          predicates:
+            - Path=/${MAIN_SERVICE_NAME}/**
+          filters:
+            - StripPrefix=1
+        - id: ${PAYMENT_SERVICE_NAME}
+          uri: http://${PAYMENT_SERVICE_HOST}:${PAYMENT_SERVICE_PORT}/
+          predicates:
+            - Path=/${PAYMENT_SERVICE_NAME}/**
+          filters:
+            - StripPrefix=1

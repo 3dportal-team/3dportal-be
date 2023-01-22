@@ -1,0 +1,5 @@
+CREATE DATABASE 3dportal
+    WITH OWNER postgres
+    ENCODING 'UTF8'
+    CONNECTION LIMIT = 300
+;
