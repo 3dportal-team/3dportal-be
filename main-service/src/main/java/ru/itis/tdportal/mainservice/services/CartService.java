@@ -6,7 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.itis.tdportal.core.dtos.PortalUserDto;
 import ru.itis.tdportal.mainservice.dtos.CartDto;
 import ru.itis.tdportal.mainservice.dtos.ModelFileDto;
+import ru.itis.tdportal.mainservice.models.entities.ModelFile;
+import ru.itis.tdportal.mainservice.models.exceptions.FreeModelFileException;
+import ru.itis.tdportal.payment.models.models.Money;
 
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -20,7 +24,13 @@ public class CartService {
     @Transactional
     public CartDto saveModel(Long modelId) {
         PortalUserDto currentUser = authenticationService.getCurrentUser();
-        modelService.getModelFileOrThrow(modelId);
+
+        ModelFile modelFile = modelService.getModelFileOrThrow(modelId);
+        Money price = modelFile.getPrice();
+        if (Objects.isNull(price) || Objects.isNull(price.getValue())) {
+            throw new FreeModelFileException("Model can't be added to cart. It's free now");
+        }
+
         redisUserService.saveToCart(modelId, currentUser.getRedisUserId().toString());
         return getCurrentUserCart();
     }
@@ -29,7 +39,7 @@ public class CartService {
     public CartDto getCurrentUserCart() {
         PortalUserDto currentUser = authenticationService.getCurrentUser();
         Set<Long> cart = redisUserService.getRedisUserCart(currentUser.getRedisUserId().toString());
-        Set<ModelFileDto> modelFileDtos = modelService.getModelFilesById(cart);
+        Set<ModelFileDto> modelFileDtos = modelService.getModelFilesByIds(cart);
 
         CartDto cartDto = new CartDto();
         cartDto.setModelFiles(modelFileDtos);
