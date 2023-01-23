@@ -6,9 +6,12 @@ import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import ru.itis.tdportal.mainservice.dtos.ModelFileDto;
+import ru.itis.tdportal.mainservice.dtos.forms.ModelFileUploadFormDto;
 import ru.itis.tdportal.mainservice.models.entities.ModelFile;
-import ru.itis.tdportal.mainservice.services.BucketFileService;
+import ru.itis.tdportal.mainservice.models.exceptions.ModelFileIncorrectException;
+import ru.itis.tdportal.mainservice.services.ModelFileBucketRepository;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -18,7 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ModelFileUtility {
 
-    private final BucketFileService bucketFileService;
+    private final ModelFileBucketRepository bucketFileService;
 
     @Named("getPreSignedUrl")
     String getPreSignedUrl(ModelFile modelFile) {
@@ -37,5 +40,15 @@ public class ModelFileUtility {
     String getGeneratedName(ModelFileDto source) {
         String generatedName = source.getGeneratedName();
         return Objects.isNull(source.getGeneratedName()) ? UUID.randomUUID().toString() : generatedName;
+    }
+
+    @Named("getFileBytes")
+    byte[] getFileBytes(ModelFileUploadFormDto source) throws IOException {
+        MultipartFile file = source.getModelFile();
+        try {
+            return file.getBytes();
+        } catch (IOException e) {
+            throw new ModelFileIncorrectException("Incorrect file");
+        }
     }
 }

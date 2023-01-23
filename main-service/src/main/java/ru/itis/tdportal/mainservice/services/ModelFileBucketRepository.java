@@ -2,8 +2,8 @@ package ru.itis.tdportal.mainservice.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.itis.tdportal.mainservice.dtos.forms.ModelFileUploadFormDto;
 import ru.itis.tdportal.mainservice.models.entities.ModelFile;
+import ru.itis.tdportal.mainservice.models.entities.ModelFileBucket;
 import ru.itis.tdportal.mainservice.properties.VkCloudBucketAccountProperty;
 import ru.itis.tdportal.mainservice.properties.VkCloudBucketProperty;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -16,7 +16,6 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Duration;
@@ -24,7 +23,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class BucketFileService {
+public class ModelFileBucketRepository {
 
     private final VkCloudBucketProperty bucketProperties;
     private final VkCloudBucketAccountProperty bucketAccountProperties;
@@ -84,22 +83,24 @@ public class BucketFileService {
         return createListRequest(null);
     }
 
-    public String saveFile(ModelFileUploadFormDto dto) {
+    public ModelFileBucket saveFile(ModelFileBucket bucket) {
         setUp();
 
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketProperties.getName())
                 .acl(ObjectCannedACL.PUBLIC_READ)
-                .key(dto.getOwner().getEmail() + "/" + dto.getGeneratedName())
+                .key(bucket.getOwnerEmail() + "/" + bucket.getGeneratedName())
                 .build();
 
         try {
             PutObjectResponse response = s3Client.putObject(
                     objectRequest,
-                    RequestBody.fromBytes(dto.getModelFile().getBytes())
+                    RequestBody.fromBytes(bucket.getFile())
             );
-            return response.eTag();
-        } catch (IOException e) {
+
+            bucket.setEntityTag(response.eTag());
+            return bucket;
+        } catch (RuntimeException e) {
             throw new IllegalArgumentException("Incorrect file");
         }
     }

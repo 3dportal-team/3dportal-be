@@ -2,9 +2,9 @@ package ru.itis.tdportal.mainservice.models.exceptions;
 
 import ru.itis.tdportal.core.models.exceptions.PortalInternalException;
 
-public class ModelFileNotFound extends PortalInternalException {
+public class ModelFileNotFoundException extends PortalInternalException {
 
-    public ModelFileNotFound(String message) {
+    public ModelFileNotFoundException(String message) {
         super(message);
     }
 }

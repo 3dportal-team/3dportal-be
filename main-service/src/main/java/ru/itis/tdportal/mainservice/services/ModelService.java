@@ -9,21 +9,24 @@ import ru.itis.tdportal.core.dtos.PortalUserDto;
 import ru.itis.tdportal.mainservice.dtos.ModelFileDto;
 import ru.itis.tdportal.mainservice.dtos.forms.ModelFileUploadFormDto;
 import ru.itis.tdportal.mainservice.models.entities.ModelFile;
+import ru.itis.tdportal.mainservice.models.entities.ModelFileBucket;
 import ru.itis.tdportal.mainservice.models.entities.PortalUser;
-import ru.itis.tdportal.mainservice.models.exceptions.ModelFileNotFound;
+import ru.itis.tdportal.mainservice.models.exceptions.ModelFileNotFoundException;
 import ru.itis.tdportal.mainservice.models.mappers.ModelFileMapper;
 import ru.itis.tdportal.mainservice.repositories.ModelFileRepository;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class ModelService {
 
     private final AuthenticationService authService;
-    private final ModelFileRepository modelFileRepository;
     private final PortalUserService portalUserService;
-    private final BucketFileService bucketFileService;
+
+    private final ModelFileRepository modelFileRepository;
+    private final ModelFileBucketRepository modelFileBucketRepository;
     private final ModelFileMapper modelFileMapper;
 
     @Transactional
@@ -31,17 +34,18 @@ public class ModelService {
         PortalUserDto currentUser = authService.getCurrentUser();
         uploadFormDto.setOwner(currentUser);
 
-        String entityTag = bucketFileService.saveFile(uploadFormDto);
+        ModelFileBucket bucket = modelFileMapper.toBucketEntity(uploadFormDto);
+        ModelFileBucket newBucket = modelFileBucketRepository.saveFile(bucket);
 
-        ModelFile modelFile = modelFileMapper.toEntity(uploadFormDto);
-        modelFile.setEntityTag(entityTag);
+        ModelFile modelFile = modelFileMapper.toModelFileEntity(uploadFormDto);
+        modelFile.setEntityTag(newBucket.getEntityTag());
 
         return modelFileMapper.toDto(modelFileRepository.save(modelFile));
     }
 
     public ModelFileDto getModelByGeneratedName(String givenName) {
         ModelFile modelFile = modelFileRepository.findByGeneratedName(givenName)
-                .orElseThrow(() -> new ModelFileNotFound(
+                .orElseThrow(() -> new ModelFileNotFoundException(
                         String.format("Model with given name = %s isn't found", givenName))
                 );
         return modelFileMapper.toDto(modelFile);
@@ -62,7 +66,7 @@ public class ModelService {
     @Transactional(readOnly = true)
     public ModelFile getModelFileOrThrow(Long modelId) {
         return modelFileRepository.findById(modelId)
-                .orElseThrow(() -> new ModelFileNotFound(String.format("Model file not found by id = %s", modelId)));
+                .orElseThrow(() -> new ModelFileNotFoundException(String.format("Model file not found by id = %s", modelId)));
     }
 
     @Transactional(readOnly = true)

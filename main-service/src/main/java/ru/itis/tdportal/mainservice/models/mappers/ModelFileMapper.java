@@ -7,6 +7,7 @@ import org.mapstruct.ReportingPolicy;
 import ru.itis.tdportal.mainservice.dtos.ModelFileDto;
 import ru.itis.tdportal.mainservice.dtos.forms.ModelFileUploadFormDto;
 import ru.itis.tdportal.mainservice.models.entities.ModelFile;
+import ru.itis.tdportal.mainservice.models.entities.ModelFileBucket;
 import ru.itis.tdportal.payment.models.models.mappers.MoneyMapper;
 
 import java.util.List;
@@ -26,7 +27,12 @@ public interface ModelFileMapper {
     @Mapping(target = "originalFileName", expression = "java(source.getModelFile().getOriginalFilename())")
     @Mapping(target = "mimeType", source = "source.modelFile", qualifiedByName = {"ModelFileUtility", "getMimeType"})
     @Mapping(target = "generatedName", source = "source", qualifiedByName = {"ModelFileUtility", "getGeneratedName"})
-    ModelFile toEntity(ModelFileUploadFormDto source);
+    ModelFile toModelFileEntity(ModelFileUploadFormDto source);
+
+    @Mapping(target = "file", source = "source", qualifiedByName = {"ModelFileUtility", "getFileBytes"})
+    @Mapping(target = "ownerEmail", expression = "java(source.getOwner().getEmail())")
+    @Mapping(target = "generatedName", source = "source", qualifiedByName = {"ModelFileUtility", "getGeneratedName"})
+    ModelFileBucket toBucketEntity(ModelFileUploadFormDto source);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "originalFileName", ignore = true)
