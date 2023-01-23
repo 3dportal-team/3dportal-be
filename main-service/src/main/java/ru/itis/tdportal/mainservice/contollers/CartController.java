@@ -10,6 +10,7 @@ import ru.itis.tdportal.mainservice.services.CartService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/cart")
+// TODO: удаление просроченной корзины (TTL)
 public class CartController {
 
     private final CartService cartService;
