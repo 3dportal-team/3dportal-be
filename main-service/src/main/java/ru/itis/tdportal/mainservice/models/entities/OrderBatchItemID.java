@@ -15,7 +15,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class OrderBatchItemID implements Serializable {
 
-    @ManyToOne(cascade = CascadeType.ALL) // TODO: проработать каскады (не только тут, но и в других сущностях)
+    @ManyToOne
+    // TODO: проработать каскады (не только тут, но и в других сущностях)
     @JoinColumn(name = "order_id")
     private OrderBatch orderBatch;
 

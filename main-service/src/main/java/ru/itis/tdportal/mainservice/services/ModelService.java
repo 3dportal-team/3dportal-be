@@ -70,7 +70,7 @@ public class ModelService {
     }
 
     @Transactional(readOnly = true)
-    public Set<ModelFileDto> getModelFilesById(Set<Long> ids) {
+    public Set<ModelFileDto> getModelFilesByIds(Set<Long> ids) {
         return modelFileMapper.toSetDto(modelFileRepository.findAllById(ids));
     }
 

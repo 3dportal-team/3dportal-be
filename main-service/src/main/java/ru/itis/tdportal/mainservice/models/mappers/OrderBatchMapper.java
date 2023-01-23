@@ -1,19 +1,33 @@
 package ru.itis.tdportal.mainservice.models.mappers;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.ReportingPolicy;
-import ru.itis.tdportal.mainservice.dtos.OrderBatchItemDto;
-import ru.itis.tdportal.mainservice.models.entities.OrderBatchItem;
-
-import java.util.List;
+import org.mapstruct.*;
+import ru.itis.tdportal.mainservice.dtos.OrderBatchDto;
+import ru.itis.tdportal.mainservice.models.entities.OrderBatch;
+import ru.itis.tdportal.mainservice.models.entities.OrderBatchItemID;
+import ru.itis.tdportal.payment.models.dtos.MoneyDto;
+import ru.itis.tdportal.payment.models.enums.Currency;
+import ru.itis.tdportal.payment.models.models.mappers.MoneyMapper;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
-        uses = OrderBatchItemMapper.class)
+        uses = {OrderBatchItemMapper.class, MoneyMapper.class})
 public interface OrderBatchMapper {
 
-    List<OrderBatchItemDto> toListDto(List<OrderBatchItem> entities);
+    OrderBatch toEntity(OrderBatchDto source);
 
-    @Mapping(target = "modelId", source = "id.modelFile.id")
-    OrderBatchItemDto toDto(OrderBatchItem entity);
+    OrderBatchDto toDto(OrderBatch source);
+
+    @BeforeMapping
+    default void setPrice(OrderBatchDto source) {
+        Double sum = source.getOrderBatchItems().stream()
+                .mapToDouble(item -> item.getPrice().getValue())
+                .sum();
+        source.setPrice(new MoneyDto(sum, Currency.RUB));
+    }
+
+    @AfterMapping
+    default void setOrderItems(@MappingTarget OrderBatch target) {
+        target.getOrderBatchItems()
+                .forEach(item -> item.setId(new OrderBatchItemID(target, item.getId().getModelFile())));
+    }
+
 }

@@ -5,9 +5,11 @@ import lombok.Setter;
 import org.hibernate.envers.NotAudited;
 import ru.itis.tdportal.core.models.entities.Audit;
 import ru.itis.tdportal.mainservice.models.enums.OrderBatchStatus;
+import ru.itis.tdportal.payment.models.models.Money;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -25,5 +27,12 @@ public class OrderBatch extends Audit<Long> {
 
     @Enumerated(EnumType.STRING)
     private OrderBatchStatus status;
+
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "total_price_value"))
+    @AttributeOverride(name = "currency", column = @Column(name = "total_price_currency"))
+    private Money price;
+
+    private UUID uuid;
 
 }

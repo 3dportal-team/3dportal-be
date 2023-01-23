@@ -2,71 +2,49 @@ package ru.itis.tdportal.mainservice.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import ru.itis.tdportal.mainservice.dtos.CartDto;
+import ru.itis.tdportal.mainservice.dtos.OrderBatchDto;
 import ru.itis.tdportal.mainservice.dtos.OrderBatchItemDto;
-import ru.itis.tdportal.mainservice.models.entities.ModelFile;
 import ru.itis.tdportal.mainservice.models.entities.OrderBatch;
-import ru.itis.tdportal.mainservice.models.entities.OrderBatchItem;
-import ru.itis.tdportal.mainservice.models.entities.OrderBatchItemID;
 import ru.itis.tdportal.mainservice.models.enums.OrderBatchStatus;
-import ru.itis.tdportal.mainservice.models.exceptions.FoundOrderBatchList;
 import ru.itis.tdportal.mainservice.models.mappers.OrderBatchMapper;
 import ru.itis.tdportal.mainservice.repositories.OrderBatchRepository;
 
-import java.util.Collections;
-import java.util.List;
+import javax.transaction.Transactional;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class OrderBatchService {
 
-    //    @Value("${order.batch.ttl}")
-    //    private Long orderBatchTTL;
-    // TODO: удаление просроченной корзины
-
-    private final AuthenticationService authService;
+    private final CartService cartService;
     private final OrderBatchRepository repository;
-    private final ModelService modelService;
     private final OrderBatchMapper orderBatchMapper;
 
-
     @Transactional
-    public void save(Long modelId) {
-        ModelFile modelFile = modelService.getModelFileOrThrow(modelId);
-        OrderBatch batch = getOrderBatchByStatusOrThrow(OrderBatchStatus.DRAFT);
-        batch.setStatus(OrderBatchStatus.DRAFT);
+    public OrderBatchDto createOrderBatchDraft() {
+        CartDto cartDto = cartService.getCurrentUserCart();
 
-        OrderBatchItem item = new OrderBatchItem();
-        item.setId(new OrderBatchItemID(batch, modelFile));
-        batch.getOrderBatchItems().add(item);
+        Set<OrderBatchItemDto> orderBatchItemDtos = cartDto.getModelFiles().stream()
+                .filter(model -> Objects.nonNull(model.getPrice()) && Objects.nonNull(model.getPrice().getValue()))
+                .map(model -> {
+                    OrderBatchItemDto item = new OrderBatchItemDto();
+                    item.setModelId(model.getId());
+                    item.setPrice(model.getPrice());
+                    return item;
+                })
+                .collect(Collectors.toSet());
 
-        repository.save(batch);
-    }
+        OrderBatchDto dto = new OrderBatchDto();
+        dto.setOrderBatchItems(orderBatchItemDtos);
+        dto.setUuid(UUID.randomUUID());
 
-    @Transactional(readOnly = true)
-    protected OrderBatch getOrderBatchByStatusOrThrow(OrderBatchStatus status) {
-        Long currentUserId = authService.getCurrentUser().getId();
-        List<OrderBatch> batches = repository.findAllByStatusAndCreatorId(status, currentUserId);
+        OrderBatch orderBatch = orderBatchMapper.toEntity(dto);
+        orderBatch.setStatus(OrderBatchStatus.DRAFT);
 
-        if (OrderBatchStatus.DRAFT.equals(status) && batches.size() > 1) {
-            throw new FoundOrderBatchList(
-                    String.format("Found order batch list for user with id = %s", currentUserId)
-                    // TODO: обработать такую ситуацию или запретить ее на уровне бд
-            );
-        }
-
-        return batches.stream()
-                .findFirst()
-                .orElseGet(() -> {
-                    OrderBatch batch = new OrderBatch();
-                    batch.setOrderBatchItems(Collections.emptyList());
-                    return batch;
-                });
-    }
-
-    public List<OrderBatchItemDto> getCurrentOrderBatchInStatusDraft() {
-        List<OrderBatchItem> items = getOrderBatchByStatusOrThrow(OrderBatchStatus.DRAFT)
-                .getOrderBatchItems();
-        return orderBatchMapper.toListDto(items);
+        return orderBatchMapper.toDto(repository.save(orderBatch));
     }
 }
