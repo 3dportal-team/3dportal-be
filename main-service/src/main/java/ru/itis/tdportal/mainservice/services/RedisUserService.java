@@ -56,4 +56,10 @@ public class RedisUserService {
         redisUser.setCart(newCart);
         repository.save(redisUser);
     }
+
+    public void clearCart(String redisUserID) {
+        RedisUser redisUser = getRedisUserOrThrow(redisUserID);
+        redisUser.setCart(Collections.emptySet());
+        repository.save(redisUser);
+    }
 }

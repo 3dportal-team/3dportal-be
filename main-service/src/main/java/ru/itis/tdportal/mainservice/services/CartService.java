@@ -52,4 +52,10 @@ public class CartService {
         redisUserService.deleteFromCart(modelId, currentUser.getRedisUserId().toString());
         return getCurrentUserCart();
     }
+
+    @Transactional
+    public void clearCurrentUserCart() {
+        PortalUserDto currentUser = authenticationService.getCurrentUser();
+        redisUserService.clearCart(currentUser.getRedisUserId().toString());
+    }
 }

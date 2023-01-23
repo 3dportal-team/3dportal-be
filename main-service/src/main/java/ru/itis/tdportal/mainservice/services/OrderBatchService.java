@@ -45,6 +45,8 @@ public class OrderBatchService {
         OrderBatch orderBatch = orderBatchMapper.toEntity(dto);
         orderBatch.setStatus(OrderBatchStatus.DRAFT);
 
-        return orderBatchMapper.toDto(repository.save(orderBatch));
+        OrderBatch createdOrderBatch = repository.save(orderBatch);
+        cartService.clearCurrentUserCart();
+        return orderBatchMapper.toDto(createdOrderBatch);
     }
 }
