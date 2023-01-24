@@ -38,8 +38,10 @@ public class ModelFileUtility {
 
     @Named("getGeneratedName")
     String getGeneratedName(ModelFileDto source) {
-        String generatedName = source.getGeneratedName();
-        return Objects.isNull(source.getGeneratedName()) ? UUID.randomUUID().toString() : generatedName;
+        String generatedName = Objects.isNull(source.getGeneratedName()) ?
+                UUID.randomUUID().toString() : source.getGeneratedName();
+        source.setGeneratedName(generatedName);
+        return generatedName;
     }
 
     @Named("getFileBytes")
