@@ -2,7 +2,7 @@ package ru.itis.tdportal.mainservice.models.entities;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.itis.tdportal.payment.models.models.Money;
+import ru.itis.tdportal.common.models.entities.Money;
 
 import javax.persistence.*;
 

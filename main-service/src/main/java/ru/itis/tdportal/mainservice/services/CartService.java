@@ -3,12 +3,12 @@ package ru.itis.tdportal.mainservice.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.itis.tdportal.common.models.entities.Money;
 import ru.itis.tdportal.core.dtos.PortalUserDto;
 import ru.itis.tdportal.mainservice.dtos.CartDto;
 import ru.itis.tdportal.mainservice.dtos.ModelFileDto;
 import ru.itis.tdportal.mainservice.models.entities.ModelFile;
 import ru.itis.tdportal.mainservice.models.exceptions.FreeModelFileException;
-import ru.itis.tdportal.payment.models.models.Money;
 
 import java.util.Objects;
 import java.util.Set;

@@ -3,9 +3,9 @@ package ru.itis.tdportal.mainservice.models.entities;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.NotAudited;
+import ru.itis.tdportal.common.models.entities.Money;
 import ru.itis.tdportal.core.models.entities.Audit;
 import ru.itis.tdportal.mainservice.models.enums.OrderBatchStatus;
-import ru.itis.tdportal.payment.models.models.Money;
 
 import javax.persistence.*;
 import java.util.List;

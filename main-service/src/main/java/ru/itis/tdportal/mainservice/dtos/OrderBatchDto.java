@@ -1,8 +1,8 @@
 package ru.itis.tdportal.mainservice.dtos;
 
 import lombok.Data;
+import ru.itis.tdportal.common.models.dtos.MoneyDto;
 import ru.itis.tdportal.mainservice.models.enums.OrderBatchStatus;
-import ru.itis.tdportal.payment.models.dtos.MoneyDto;
 
 import java.util.Set;
 import java.util.UUID;

@@ -3,9 +3,9 @@ package ru.itis.tdportal.mainservice.models.mappers;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
+import ru.itis.tdportal.common.models.mappers.MoneyMapper;
 import ru.itis.tdportal.mainservice.dtos.OrderBatchItemDto;
 import ru.itis.tdportal.mainservice.models.entities.OrderBatchItem;
-import ru.itis.tdportal.payment.models.models.mappers.MoneyMapper;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
         uses = {ModelFileMapper.class, MoneyMapper.class})

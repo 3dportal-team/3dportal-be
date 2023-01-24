@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.itis.tdportal.common.models.dtos.MoneyDto;
 import ru.itis.tdportal.core.dtos.PortalUserDto;
-import ru.itis.tdportal.payment.models.dtos.MoneyDto;
 
 import java.time.Instant;
 

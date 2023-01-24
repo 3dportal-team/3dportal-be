@@ -2,11 +2,11 @@ package ru.itis.tdportal.paymentservice.models.entities;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.itis.tdportal.payment.models.models.Money;
-import ru.itis.tdportal.paymentservice.models.enums.PaymentStatus;
+import ru.itis.tdportal.common.models.entities.Money;
+import ru.itis.tdportal.common.models.enums.PaymentStatus;
 
 import javax.persistence.*;
-import java.time.Instant;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -21,6 +21,8 @@ public class Payment {
     @Enumerated(value = EnumType.STRING)
     private PaymentStatus status;
 
+    private String description;
+
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "amount_value"))
     @AttributeOverride(name = "currency", column = @Column(name = "amount_currency"))
@@ -28,15 +30,6 @@ public class Payment {
 
     private Boolean paid;
 
-    @Column(name = "expires_at")
-    private Instant expiresAt;
-
-    private Boolean refundable;
-
-    @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "income_value"))
-    @AttributeOverride(name = "currency", column = @Column(name = "income_currency"))
-    private Money incomeAmount;
-
-    private String description;
+    @Column(name = "idempotence_key")
+    private UUID idempotenceKey;
 }

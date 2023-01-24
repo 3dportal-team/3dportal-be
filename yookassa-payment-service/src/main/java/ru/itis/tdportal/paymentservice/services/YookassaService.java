@@ -7,12 +7,12 @@ import org.apache.http.entity.StringEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import ru.itis.tdportal.core.constants.HttpHeader;
+import ru.itis.tdportal.common.clients.constants.HttpHeader;
+import ru.itis.tdportal.common.clients.custom.HttpClient;
+import ru.itis.tdportal.common.clients.custom.HttpRequest;
+import ru.itis.tdportal.common.models.dtos.PaymentDto;
 import ru.itis.tdportal.paymentservice.dtos.CreatedPaymentDto;
-import ru.itis.tdportal.paymentservice.dtos.PaymentDto;
 import ru.itis.tdportal.paymentservice.dtos.YookassaAccountDto;
-import ru.itis.tdportal.paymentservice.models.http.HttpRequest;
-import ru.itis.tdportal.paymentservice.util.HttpClient;
 
 import java.util.UUID;
 

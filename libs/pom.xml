@@ -13,9 +13,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>payment-lib</module>
         <module>core-lib</module>
         <module>liquibase-lib</module>
+        <module>common-models</module>
+        <module>common-clients</module>
     </modules>
 
 </project>

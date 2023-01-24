@@ -2,6 +2,9 @@ package ru.itis.tdportal.mainservice.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.itis.tdportal.common.clients.feign.YooPaymentServiceClient;
+import ru.itis.tdportal.common.models.dtos.PaymentDto;
+import ru.itis.tdportal.common.models.enums.PaymentStatus;
 import ru.itis.tdportal.mainservice.dtos.CartDto;
 import ru.itis.tdportal.mainservice.dtos.OrderBatchDto;
 import ru.itis.tdportal.mainservice.dtos.OrderBatchItemDto;
@@ -20,6 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderBatchService {
 
+    private final YooPaymentServiceClient client;
     private final CartService cartService;
     private final OrderBatchRepository repository;
     private final OrderBatchMapper orderBatchMapper;
@@ -47,6 +51,16 @@ public class OrderBatchService {
 
         OrderBatch createdOrderBatch = repository.save(orderBatch);
         cartService.clearCurrentUserCart();
-        return orderBatchMapper.toDto(createdOrderBatch);
+
+        OrderBatchDto orderBatchDto = orderBatchMapper.toDto(createdOrderBatch);
+        PaymentDto paymentDto = new PaymentDto(
+                PaymentStatus.CREATED,
+                String.format("Платеж по заказу %s", dto.getUuid()),
+                orderBatchDto.getPrice(),
+                false
+        );
+        client.createPayment(createdOrderBatch.getUuid(), paymentDto);
+
+        return orderBatchDto;
     }
 }

@@ -1,12 +1,12 @@
 package ru.itis.tdportal.mainservice.models.mappers;
 
 import org.mapstruct.*;
+import ru.itis.tdportal.common.models.dtos.MoneyDto;
+import ru.itis.tdportal.common.models.enums.Currency;
+import ru.itis.tdportal.common.models.mappers.MoneyMapper;
 import ru.itis.tdportal.mainservice.dtos.OrderBatchDto;
 import ru.itis.tdportal.mainservice.models.entities.OrderBatch;
 import ru.itis.tdportal.mainservice.models.entities.OrderBatchItemID;
-import ru.itis.tdportal.payment.models.dtos.MoneyDto;
-import ru.itis.tdportal.payment.models.enums.Currency;
-import ru.itis.tdportal.payment.models.models.mappers.MoneyMapper;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
         uses = {OrderBatchItemMapper.class, MoneyMapper.class})

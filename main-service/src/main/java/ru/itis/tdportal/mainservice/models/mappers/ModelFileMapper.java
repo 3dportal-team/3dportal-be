@@ -4,11 +4,11 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
+import ru.itis.tdportal.common.models.mappers.MoneyMapper;
 import ru.itis.tdportal.mainservice.dtos.ModelFileDto;
 import ru.itis.tdportal.mainservice.dtos.forms.ModelFileUploadFormDto;
 import ru.itis.tdportal.mainservice.models.entities.ModelFile;
 import ru.itis.tdportal.mainservice.models.entities.ModelFileBucket;
-import ru.itis.tdportal.payment.models.models.mappers.MoneyMapper;
 
 import java.util.List;
 import java.util.Set;

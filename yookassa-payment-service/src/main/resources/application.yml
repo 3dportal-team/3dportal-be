@@ -17,8 +17,9 @@ spring:
 
 yookassa:
   api:
-    uri: ${YOOKASSA_API_URI:https://api.yookassa.ru/v3/}
+    uri: ${YOOKASSA_API_URI:https://api.yookassa.ru/v3}
     shop:
       id: ${YOOKASSA_SHOP_ID}
     secret-key: ${YOOKASSA_API_SECRET}
+  return-url: ${YOOKASSA_RETURN_URL}
 

@@ -2,12 +2,13 @@ package ru.itis.tdportal.paymentservice.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.itis.tdportal.common.clients.constants.HttpHeader;
+import ru.itis.tdportal.common.models.dtos.PaymentDto;
 import ru.itis.tdportal.paymentservice.dtos.CreatedPaymentDto;
-import ru.itis.tdportal.paymentservice.dtos.PaymentDto;
-import ru.itis.tdportal.paymentservice.models.enums.PaymentMethodData;
 import ru.itis.tdportal.paymentservice.services.PaymentService;
 
-import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,13 +17,17 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    @GetMapping("/info")
-    public List<PaymentMethodData> getSupportedPaymentMethods() {
-        return paymentService.getSupportedPaymentMethods();
+    @PostMapping
+    // TODO: это должно быть internal
+    public CreatedPaymentDto createPayment(
+            @RequestHeader(name = HttpHeader.IdempotenceKey) UUID idempotenceKey,
+            @RequestBody PaymentDto dto) {
+        return paymentService.savePayment(dto, idempotenceKey);
     }
 
-    @PostMapping
-    public CreatedPaymentDto createPayment(@RequestBody PaymentDto dto) {
-        return paymentService.savePayment(dto);
+    @PutMapping("/{idempotenceKey}")
+    public Map<String, String> movePaymentToStatusPayment(
+            @PathVariable UUID idempotenceKey) {
+        return paymentService.movePaymentToStatusPending(idempotenceKey);
     }
 }
