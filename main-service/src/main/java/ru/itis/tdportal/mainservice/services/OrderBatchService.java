@@ -75,8 +75,10 @@ public class OrderBatchService {
         switch (status) {
             case SUCCEEDED:
                 order.setStatus(OrderBatchStatus.PAID);
+                break;
             case CANCELED:
                 order.setStatus(OrderBatchStatus.ERROR);
+                break;
         }
     }
 }
