@@ -25,9 +25,9 @@ public class OrderBatchController {
         return orderBatchService.createOrderBatchDraft();
     }
 
-    @PostMapping
+    @PostMapping("/{idempotenceKey}")
     //TODO: должно быть internal
-    public void updateOrderBatchStatus(@RequestHeader(HttpHeader.IdempotenceKey) UUID idempotenceKey,
+    public void updateOrderBatchStatus(@PathVariable UUID idempotenceKey,
                                        @RequestParam PaymentStatus status) {
         orderBatchService.updateOrderBatchStatus(idempotenceKey, status);
     }
