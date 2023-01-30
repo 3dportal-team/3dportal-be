@@ -1,9 +1,9 @@
-#version: '3.4'
-#
-#services:
-#  3dportal-gateway-api:
-#    build: gateway-api
-#  3dportal-main-service:
-#    build: main-service
-#  3dportal-yookassa-payment-service:
-#    build: yookassa-payment-service
+version: '3.4'
+
+services:
+  3dportal-gateway-api:
+    build: gateway-api
+  3dportal-main-service:
+    build: main-service
+  3dportal-yookassa-payment-service:
+    build: yookassa-payment-service
