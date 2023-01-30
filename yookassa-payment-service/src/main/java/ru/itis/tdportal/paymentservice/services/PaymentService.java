@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.itis.tdportal.common.clients.feign.MainServiceClient;
 import ru.itis.tdportal.common.models.dtos.PaymentDto;
+import ru.itis.tdportal.common.models.enums.PaymentStatus;
 import ru.itis.tdportal.paymentservice.dtos.CreatedPaymentDto;
 import ru.itis.tdportal.paymentservice.dtos.YookassaNotificationDto;
 import ru.itis.tdportal.paymentservice.models.entities.Payment;
@@ -25,6 +27,7 @@ public class PaymentService {
     @Value("${yookassa.return-url}")
     private String returnUrl;
 
+    private final MainServiceClient mainServiceClient;
     private final PaymentMapper paymentMapper;
     private final PaymentRepository repository;
     private final YookassaService yookassaService;
@@ -58,6 +61,7 @@ public class PaymentService {
     public Map<String, String> movePaymentToStatusPending(UUID idempotenceKey) {
         Payment payment = getPaymentByKeyOrThrow(idempotenceKey);
         CreatedPaymentDto dto = paymentMapper.toDto(payment);
+        dto.setCapture(true);
 
         // TODO: убрать хардкод
         dto.setConfirmation(Map.of(
@@ -75,12 +79,16 @@ public class PaymentService {
 
     @Transactional
     public void movePaymentToStatusByEvent(YookassaNotificationDto dto) {
+        // TODO: проверка на NPE
         Payment payment = getByYooIdOrThrow(dto.getObject().getId());
-        payment.setStatus(dto.getEvent().getObjectStatus());
+        PaymentStatus status = dto.getEvent().getObjectStatus();
+        payment.setStatus(status);
+
+        mainServiceClient.updatePaymentStatusNotification(payment.getIdempotenceKey(), status);
 
         log.info(String.format(
                 "Payment %s successfully moved to status %s",
-                payment.getId(), payment.getStatus())
+                payment.getId(), status)
         );
     }
 }

@@ -10,6 +10,7 @@ import ru.itis.tdportal.mainservice.dtos.OrderBatchDto;
 import ru.itis.tdportal.mainservice.dtos.OrderBatchItemDto;
 import ru.itis.tdportal.mainservice.models.entities.OrderBatch;
 import ru.itis.tdportal.mainservice.models.enums.OrderBatchStatus;
+import ru.itis.tdportal.mainservice.models.exceptions.OrderBatchNotFoundException;
 import ru.itis.tdportal.mainservice.models.mappers.OrderBatchMapper;
 import ru.itis.tdportal.mainservice.repositories.OrderBatchRepository;
 
@@ -62,5 +63,20 @@ public class OrderBatchService {
         client.createPayment(createdOrderBatch.getUuid(), paymentDto);
 
         return orderBatchDto;
+    }
+
+    @Transactional
+    public void updateOrderBatchStatus(UUID uuid, PaymentStatus status) {
+        OrderBatch order = repository.findByUuid(uuid)
+                .orElseThrow(() -> new OrderBatchNotFoundException(String.format(
+                        "Order was not found by uuid %s", uuid
+                )));
+
+        switch (status) {
+            case SUCCEEDED:
+                order.setStatus(OrderBatchStatus.PAID);
+            case CANCELED:
+                order.setStatus(OrderBatchStatus.ERROR);
+        }
     }
 }

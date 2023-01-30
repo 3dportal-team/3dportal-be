@@ -21,4 +21,5 @@ public class CreatedPaymentDto extends PaymentDto {
 
     private Map<String, String> confirmation;
 
+    private Boolean capture;
 }

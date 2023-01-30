@@ -34,6 +34,7 @@ public class PaymentController {
 
     @PostMapping("/notify")
     // TODO: это должно быть external
+    // TODO: добавить проверку адресов
     public void movePaymentToStatus(@RequestBody YookassaNotificationDto dto) {
         paymentService.movePaymentToStatusByEvent(dto); // TODO: может быть refund
     }
