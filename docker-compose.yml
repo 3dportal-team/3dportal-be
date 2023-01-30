@@ -47,6 +47,7 @@ services:
       - 3dportal-postgres
     ports:
       - ${PAYMENT_SERVICE_PORT}:${PAYMENT_SERVICE_PORT}
+      - ${PAYMENT_SERVICE_HTTPS_PORT}:${PAYMENT_SERVICE_HTTPS_PORT}
     networks:
       - net
 

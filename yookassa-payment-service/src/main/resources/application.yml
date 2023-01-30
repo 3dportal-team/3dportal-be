@@ -1,6 +1,6 @@
 debug: ${SPRING_DEBUG:false}
 server:
-  port: ${PAYMENT_SERVICE_HTTPS:8443}
+  port: ${PAYMENT_SERVICE_HTTPS_PORT:8443}
   forward-headers-strategy: framework
   ssl:
     enabled: true
