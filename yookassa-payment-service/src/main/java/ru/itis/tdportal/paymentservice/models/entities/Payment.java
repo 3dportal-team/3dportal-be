@@ -32,4 +32,7 @@ public class Payment {
 
     @Column(name = "idempotence_key")
     private UUID idempotenceKey;
+
+    @Column(name = "yoo_id")
+    private UUID yooId;
 }

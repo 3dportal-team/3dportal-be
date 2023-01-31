@@ -1,21 +1,25 @@
 package ru.itis.tdportal.paymentservice.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.itis.tdportal.common.clients.feign.MainServiceClient;
 import ru.itis.tdportal.common.models.dtos.PaymentDto;
-import ru.itis.tdportal.common.models.mappers.MoneyMapper;
+import ru.itis.tdportal.common.models.enums.PaymentStatus;
 import ru.itis.tdportal.paymentservice.dtos.CreatedPaymentDto;
+import ru.itis.tdportal.paymentservice.dtos.YookassaNotificationDto;
 import ru.itis.tdportal.paymentservice.models.entities.Payment;
 import ru.itis.tdportal.paymentservice.models.enums.ConfirmationType;
 import ru.itis.tdportal.paymentservice.models.exceptions.PaymentNotFoundException;
 import ru.itis.tdportal.paymentservice.models.mappers.PaymentMapper;
 import ru.itis.tdportal.paymentservice.repositories.PaymentRepository;
 
-import javax.transaction.Transactional;
 import java.util.Map;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
@@ -23,7 +27,7 @@ public class PaymentService {
     @Value("${yookassa.return-url}")
     private String returnUrl;
 
-    private final MoneyMapper moneyMapper;
+    private final MainServiceClient mainServiceClient;
     private final PaymentMapper paymentMapper;
     private final PaymentRepository repository;
     private final YookassaService yookassaService;
@@ -35,7 +39,7 @@ public class PaymentService {
         return paymentMapper.toDto(repository.save(payment));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Payment getPaymentByKeyOrThrow(UUID idempotenceKey) {
         return repository.findByIdempotenceKey(idempotenceKey)
                 .orElseThrow(() -> new PaymentNotFoundException(
@@ -44,10 +48,20 @@ public class PaymentService {
                 );
     }
 
+    @Transactional(readOnly = true)
+    public Payment getByYooIdOrThrow(UUID yooId) {
+        return repository.findByYooId(yooId)
+                .orElseThrow(() -> new PaymentNotFoundException(
+                        String.format("Payment not found by yookassa ID %s", yooId
+                        ))
+                );
+    }
+
     @Transactional
     public Map<String, String> movePaymentToStatusPending(UUID idempotenceKey) {
         Payment payment = getPaymentByKeyOrThrow(idempotenceKey);
         CreatedPaymentDto dto = paymentMapper.toDto(payment);
+        dto.setCapture(true);
 
         // TODO: убрать хардкод
         dto.setConfirmation(Map.of(
@@ -61,5 +75,20 @@ public class PaymentService {
         paymentMapper.merge(payment, pendingPayment);
 
         return pendingPayment.getConfirmation();
+    }
+
+    @Transactional
+    public void movePaymentToStatusByEvent(YookassaNotificationDto dto) {
+        // TODO: проверка на NPE
+        Payment payment = getByYooIdOrThrow(dto.getObject().getId());
+        PaymentStatus status = dto.getEvent().getObjectStatus();
+        payment.setStatus(status);
+
+        mainServiceClient.updatePaymentStatusNotification(payment.getIdempotenceKey(), status);
+
+        log.info(String.format(
+                "Payment %s successfully moved to status %s",
+                payment.getId(), status)
+        );
     }
 }

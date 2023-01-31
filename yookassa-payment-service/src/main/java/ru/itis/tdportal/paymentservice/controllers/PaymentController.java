@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.itis.tdportal.common.clients.constants.HttpHeader;
 import ru.itis.tdportal.common.models.dtos.PaymentDto;
 import ru.itis.tdportal.paymentservice.dtos.CreatedPaymentDto;
+import ru.itis.tdportal.paymentservice.dtos.YookassaNotificationDto;
 import ru.itis.tdportal.paymentservice.services.PaymentService;
 
 import java.util.Map;
@@ -26,8 +27,15 @@ public class PaymentController {
     }
 
     @PutMapping("/{idempotenceKey}")
-    public Map<String, String> movePaymentToStatusPayment(
+    public Map<String, String> movePaymentToStatusPending(
             @PathVariable UUID idempotenceKey) {
         return paymentService.movePaymentToStatusPending(idempotenceKey);
+    }
+
+    @PostMapping("/notify")
+    // TODO: это должно быть external
+    // TODO: добавить проверку адресов
+    public void movePaymentToStatus(@RequestBody YookassaNotificationDto dto) {
+        paymentService.movePaymentToStatusByEvent(dto); // TODO: может быть refund
     }
 }
