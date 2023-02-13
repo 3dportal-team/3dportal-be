@@ -29,6 +29,9 @@ yookassa:
     uri: ${YOOKASSA_API_URI:https://api.yookassa.ru/v3}
     shop:
       id: ${YOOKASSA_SHOP_ID}
-    secret-key: ${YOOKASSA_API_SECRET}
+      secret-key: ${YOOKASSA_SHOP_SECRET_KEY}
+    agent:
+      id: ${YOOKASSA_AGENT_ID}
+      secret-key: ${YOOKASSA_AGENT_SECRET_KEY}
   return-url: ${YOOKASSA_RETURN_URL}
 

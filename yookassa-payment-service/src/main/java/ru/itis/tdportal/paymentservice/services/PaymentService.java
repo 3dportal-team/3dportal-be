@@ -6,12 +6,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itis.tdportal.common.clients.feign.MainServiceClient;
+import ru.itis.tdportal.common.models.dtos.MoneyDto;
 import ru.itis.tdportal.common.models.dtos.PaymentDto;
+import ru.itis.tdportal.common.models.entities.Money;
 import ru.itis.tdportal.common.models.enums.PaymentStatus;
 import ru.itis.tdportal.paymentservice.dtos.CreatedPaymentDto;
+import ru.itis.tdportal.paymentservice.dtos.PayoutDto;
 import ru.itis.tdportal.paymentservice.dtos.YookassaNotificationDto;
 import ru.itis.tdportal.paymentservice.models.entities.Payment;
 import ru.itis.tdportal.paymentservice.models.enums.ConfirmationType;
+import ru.itis.tdportal.paymentservice.models.enums.PayoutStatus;
 import ru.itis.tdportal.paymentservice.models.exceptions.PaymentNotFoundException;
 import ru.itis.tdportal.paymentservice.models.mappers.PaymentMapper;
 import ru.itis.tdportal.paymentservice.repositories.PaymentRepository;
@@ -31,6 +35,7 @@ public class PaymentService {
     private final PaymentMapper paymentMapper;
     private final PaymentRepository repository;
     private final YookassaService yookassaService;
+    private final PayoutService payoutService;
 
     @Transactional
     public CreatedPaymentDto savePayment(PaymentDto dto, UUID idempotenceKey) {
@@ -85,6 +90,19 @@ public class PaymentService {
         payment.setStatus(status);
 
         mainServiceClient.updatePaymentStatusNotification(payment.getIdempotenceKey(), status);
+
+        if (PaymentStatus.SUCCEEDED.equals(status)) {
+            PayoutDto payoutDto = new PayoutDto();
+            payoutDto.setPaymentMethodId(payment.getReceiver().getPayoutToken());
+
+            Money paymentAmount = payment.getAmount();
+            // TODO: должна быть нормальная формула для расчета выплаты по заказу
+            payoutDto.setAmount(new MoneyDto(paymentAmount.getValue() * 0.7, paymentAmount.getCurrency()) );
+
+            payoutDto.setDescription(String.format("Выплата по заказу %s", payment.getIdempotenceKey()));
+
+            payoutService.createPayout(new PayoutDto(), payment.getIdempotenceKey());
+        }
 
         log.info(String.format(
                 "Payment %s successfully moved to status %s",
