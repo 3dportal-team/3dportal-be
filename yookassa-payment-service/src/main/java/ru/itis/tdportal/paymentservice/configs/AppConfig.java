@@ -1,5 +1,6 @@
 package ru.itis.tdportal.paymentservice.configs;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import org.apache.catalina.connector.Connector;
 import org.apache.coyote.http11.Http11Nio2Protocol;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,7 @@ import ru.itis.tdportal.core.configs.PortalCoreConfig;
 import ru.itis.tdportal.liquibase.configs.LiquibaseConfig;
 
 @Configuration
+@OpenAPIDefinition
 @Import({PortalCoreConfig.class, LiquibaseConfig.class, OpenFeignConfig.class})
 public class AppConfig {
 

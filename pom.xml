@@ -54,6 +54,7 @@
             <artifactId>commons-collections4</artifactId>
             <version>${commons-collection.version}</version>
         </dependency>
+
     </dependencies>
 
     <build>

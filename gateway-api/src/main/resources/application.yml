@@ -17,3 +17,5 @@ spring:
             - Path=/${PAYMENT_SERVICE_NAME}/**
           filters:
             - StripPrefix=1
+  main:
+    web-application-type: reactive

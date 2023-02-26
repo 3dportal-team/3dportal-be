@@ -23,6 +23,9 @@ spring:
       enabled: true
       change-log: classpath:db/changelog/db.changelog-master-postgres.xml
       default-schema: ${POSTGRES_PAYMENT_SCHEMA:payment_service_schema}
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 yookassa:
   api:

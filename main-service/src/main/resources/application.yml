@@ -35,7 +35,7 @@ spring:
       max-request-size: ${MULTIPART_MAX_REQUEST_SIZE}
   mvc:
     pathmatch:
-      matching-strategy: ant_path_matcher # TODO нужно ли это?
+      matching-strategy: ant_path_matcher
   api-docs:
     path: /docs # TODO нужно ли это?
 
