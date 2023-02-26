@@ -3,11 +3,11 @@ package ru.itis.tdportal.mainservice.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.itis.tdportal.core.constants.ExceptionStrings;
 import ru.itis.tdportal.mainservice.dtos.InstrumentDto;
 import ru.itis.tdportal.mainservice.dtos.forms.InstrumentFormDto;
 import ru.itis.tdportal.mainservice.models.entities.Instrument;
 import ru.itis.tdportal.mainservice.models.entities.PortalUser;
+import ru.itis.tdportal.mainservice.models.exceptions.InstrumentNotFoundException;
 import ru.itis.tdportal.mainservice.models.filters.InstrumentFilter;
 import ru.itis.tdportal.mainservice.models.mappers.InstrumentMapper;
 import ru.itis.tdportal.mainservice.repositories.InstrumentRepository;
@@ -37,9 +37,9 @@ public class InstrumentService {
 
     @Transactional
     public InstrumentDto changeInstrumentById(InstrumentDto instrumentDto) {
-        Instrument foundInstrument = instrumentRepository.findById(instrumentDto.getId()).orElseThrow(
-                () -> new IllegalArgumentException(
-                        ExceptionStrings.INSTRUMENT_WITH_ID_DOES_NOT_EXIST(String.valueOf(instrumentDto.getId())))
+        Long instrumentId = instrumentDto.getId();
+        Instrument foundInstrument = instrumentRepository.findById(instrumentId).orElseThrow(
+                () -> new InstrumentNotFoundException(String.format("Instrument with id: '%s' does not exist!", instrumentId))
         );
 
         Instrument updatedInstrument = instrumentMapper.merge(foundInstrument, instrumentDto);

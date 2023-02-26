@@ -45,7 +45,7 @@ public class ModelFileUtility {
     }
 
     @Named("getFileBytes")
-    byte[] getFileBytes(ModelFileUploadFormDto source) throws IOException {
+    byte[] getFileBytes(ModelFileUploadFormDto source) {
         MultipartFile file = source.getModelFile();
         try {
             return file.getBytes();

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.itis.tdportal.mainservice.models.entities.ModelFile;
 import ru.itis.tdportal.mainservice.models.entities.ModelFileBucket;
+import ru.itis.tdportal.mainservice.models.exceptions.IncorrectModelFileException;
 import ru.itis.tdportal.mainservice.properties.VkCloudBucketAccountProperty;
 import ru.itis.tdportal.mainservice.properties.VkCloudBucketProperty;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -101,7 +102,7 @@ public class ModelFileBucketRepository {
             bucket.setEntityTag(response.eTag());
             return bucket;
         } catch (RuntimeException e) {
-            throw new IllegalArgumentException("Incorrect file");
+            throw new IncorrectModelFileException("Incorrect file");
         }
     }
 

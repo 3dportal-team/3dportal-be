@@ -5,9 +5,9 @@ import ru.itis.tdportal.core.models.annotations.InternalError;
 import ru.itis.tdportal.core.models.exceptions.PortalInternalException;
 
 @InternalError(httpStatus = HttpStatus.NOT_FOUND)
-public class ModelFileNotFoundException extends PortalInternalException {
+public class UserNotFoundException extends PortalInternalException {
 
-    public ModelFileNotFoundException(String message) {
+    public UserNotFoundException(String message) {
         super(message);
     }
 }

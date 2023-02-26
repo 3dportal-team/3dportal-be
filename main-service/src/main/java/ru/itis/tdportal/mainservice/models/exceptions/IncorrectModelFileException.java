@@ -4,10 +4,10 @@ import org.springframework.http.HttpStatus;
 import ru.itis.tdportal.core.models.annotations.InternalError;
 import ru.itis.tdportal.core.models.exceptions.PortalInternalException;
 
-@InternalError(httpStatus = HttpStatus.NOT_FOUND)
-public class ModelFileNotFoundException extends PortalInternalException {
+@InternalError(httpStatus = HttpStatus.INTERNAL_SERVER_ERROR)
+public class IncorrectModelFileException extends PortalInternalException {
 
-    public ModelFileNotFoundException(String message) {
+    public IncorrectModelFileException(String message) {
         super(message);
     }
 }

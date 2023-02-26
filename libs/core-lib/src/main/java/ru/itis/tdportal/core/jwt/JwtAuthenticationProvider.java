@@ -6,15 +6,13 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import ru.itis.tdportal.core.constants.ExceptionStrings;
 import ru.itis.tdportal.core.dtos.PortalUserDto;
 import ru.itis.tdportal.core.models.enums.PortalUserRole;
+import ru.itis.tdportal.core.models.exceptions.AuthenticationException;
 
 import java.util.UUID;
 
@@ -41,7 +39,8 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
             decodedJWT = verifier.verify(token);
         } catch (Exception e) {
             authentication.setAuthenticated(false);
-            throw new AuthenticationCredentialsNotFoundException(ExceptionStrings.BAD_TOKEN);
+
+            throw new AuthenticationException("Bad token");
         }
 
         Long id = Long.valueOf(decodedJWT.getSubject());

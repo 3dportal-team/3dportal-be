@@ -1,17 +1,15 @@
 package ru.itis.tdportal.mainservice.contollers;
 
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.tdportal.mainservice.dtos.InstrumentDto;
-import ru.itis.tdportal.mainservice.dtos.MessageDto;
 import ru.itis.tdportal.mainservice.dtos.ModelFileDto;
 import ru.itis.tdportal.mainservice.dtos.forms.InstrumentFormDto;
-import ru.itis.tdportal.mainservice.models.enums.MessageTypes;
 import ru.itis.tdportal.mainservice.models.filters.InstrumentFilter;
 import ru.itis.tdportal.mainservice.services.InstrumentService;
 import ru.itis.tdportal.mainservice.services.ModelService;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,35 +20,30 @@ public class InstrumentsController {
     private final InstrumentService instrumentService;
 
     @GetMapping(value = "/models/model--{generatedName}")
-    public ResponseEntity<?> getModelByGeneratedName(
+    public ModelFileDto getModelByGeneratedName(
             @PathVariable String generatedName
     ) {
-        ModelFileDto modelFileDto = modelService.getModelByGeneratedName(generatedName);
-        return ResponseEntity.ok(modelFileDto);
+        return modelService.getModelByGeneratedName(generatedName);
     }
 
     @PostMapping
-    public MessageDto createInstrument(
+    public Boolean createInstrument(
             @RequestBody InstrumentFormDto instrumentForm
     ) {
-        instrumentService.createInstrument(instrumentForm);
-        return MessageDto.builder()
-                .type(MessageTypes.SUCCESS)
-                .message("Инструмент успешно создан!")
-                .build();
+        return instrumentService.createInstrument(instrumentForm);
     }
 
     @GetMapping
-    public ResponseEntity<?> getInstrumentsByFilter(InstrumentFilter filter) {
-        return ResponseEntity.ok(instrumentService.getInstrumentsByFilter(filter));
+    public List<InstrumentDto> getInstrumentsByFilter(InstrumentFilter filter) {
+        return instrumentService.getInstrumentsByFilter(filter);
     }
 
     @PutMapping(value = "/{instrumentId}")
-    public ResponseEntity<?> changeInstrumentById(
+    public InstrumentDto changeInstrumentById(
             @PathVariable Long instrumentId,
             @RequestBody InstrumentDto instrumentDto
     ) {
         instrumentDto.setId(instrumentId);
-        return ResponseEntity.ok(instrumentService.changeInstrumentById(instrumentDto));
+        return instrumentService.changeInstrumentById(instrumentDto);
     }
 }

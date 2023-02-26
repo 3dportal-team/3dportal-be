@@ -5,13 +5,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.itis.tdportal.core.constants.ExceptionStrings;
 import ru.itis.tdportal.core.dtos.PortalUserDto;
 import ru.itis.tdportal.core.dtos.TokenDto;
 import ru.itis.tdportal.core.jwt.UserDetailsImpl;
 import ru.itis.tdportal.core.services.JWTService;
 import ru.itis.tdportal.mainservice.dtos.forms.LoginFormDto;
 import ru.itis.tdportal.mainservice.models.entities.PortalUser;
+import ru.itis.tdportal.mainservice.models.exceptions.IncorrectUserCredentials;
 import ru.itis.tdportal.mainservice.models.mappers.PortalUserMapper;
 import ru.itis.tdportal.mainservice.repositories.PortalUserRepository;
 
@@ -31,11 +31,11 @@ public class AuthenticationService {
     @Transactional
     public TokenDto login(LoginFormDto loginForm) {
         PortalUser portalUser = portalUserRepository.findByEmail(loginForm.getEmail()).orElseThrow(
-                () -> new IllegalArgumentException(ExceptionStrings.YOUR_EMAIL_PASSWORD_IS_INCORRECT)
+                () -> new IncorrectUserCredentials("Your email/password is incorrect!")
         );
 
         if (!passwordEncoder.matches(loginForm.getPassword(), portalUser.getHashPassword())) {
-            throw new IllegalArgumentException(ExceptionStrings.YOUR_EMAIL_PASSWORD_IS_INCORRECT);
+            throw new IncorrectUserCredentials("Your email/password is incorrect!");
         }
 
         if (Objects.isNull(portalUser.getRedisUserId())) {

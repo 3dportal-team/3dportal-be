@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.itis.tdportal.core.constants.ExceptionStrings;
 import ru.itis.tdportal.core.models.enums.PortalUserRole;
 import ru.itis.tdportal.mainservice.dtos.forms.RegisterFormDto;
 import ru.itis.tdportal.mainservice.models.entities.PortalUser;
 import ru.itis.tdportal.mainservice.models.entities.Profile;
+import ru.itis.tdportal.mainservice.models.exceptions.UserAlreadyExistException;
 import ru.itis.tdportal.mainservice.repositories.PortalUserRepository;
 import ru.itis.tdportal.mainservice.repositories.ProfileRepository;
 
@@ -26,7 +26,7 @@ public class RegisterService {
     public boolean registerUser(RegisterFormDto registerForm) {
         portalUserRepository.findByEmail(registerForm.getEmail())
                 .ifPresent(user -> {
-                    throw new IllegalArgumentException(ExceptionStrings.USER_WITH_EMAIL_ALREADY_EXIST(user.getEmail()));
+                    throw new UserAlreadyExistException(String.format("User with email '%s' exist!", user.getEmail()));
                 });
 
         PortalUser newPortalUser = PortalUser.builder()

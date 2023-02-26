@@ -1,9 +1,9 @@
 package ru.itis.tdportal.mainservice.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.itis.tdportal.core.constants.ExceptionStrings;
 import ru.itis.tdportal.core.dtos.PortalUserDto;
 import ru.itis.tdportal.core.models.enums.PortalUserRole;
 import ru.itis.tdportal.mainservice.dtos.ApiKeyDto;
@@ -61,14 +61,13 @@ public class PortalUserService {
                         .build();
             }
         }
-        throw new IllegalArgumentException(
-                ExceptionStrings.USER_WITH_ID_DOES_NOT_EXIST(String.valueOf(userId))
-        );
+
+        throw new UsernameNotFoundException(String.format("User with id: '%s' does not exist!", userId));
     }
 
     @Transactional(readOnly = true)
     public PortalUser getByIdOrElseThrow(Long userId) {
         return portalUserRepository.findById(userId).orElseThrow(
-                () -> new IllegalArgumentException(ExceptionStrings.USER_WITH_ID_DOES_NOT_EXIST(String.valueOf(userId))));
+                () -> new UsernameNotFoundException(String.format("User with id: '%s' does not exist!", userId)));
     }
 }

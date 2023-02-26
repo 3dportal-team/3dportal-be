@@ -54,7 +54,7 @@ public class HttpClient {
             entity = new StringEntity(json);
 
         } catch (JsonProcessingException | UnsupportedEncodingException e) {
-            throw new IllegalArgumentException(e);
+            throw new IllegalArgumentException(e); // TODO: обработать иначе
         }
         return entity;
     }

@@ -8,7 +8,7 @@ import ru.itis.tdportal.core.dtos.PortalUserDto;
 import ru.itis.tdportal.mainservice.dtos.CartDto;
 import ru.itis.tdportal.mainservice.dtos.ModelFileDto;
 import ru.itis.tdportal.mainservice.models.entities.ModelFile;
-import ru.itis.tdportal.mainservice.models.exceptions.FreeModelFileException;
+import ru.itis.tdportal.mainservice.models.exceptions.ModelFileIsFreeException;
 
 import java.util.Objects;
 import java.util.Set;
@@ -28,7 +28,7 @@ public class CartService {
         ModelFile modelFile = modelService.getModelFileOrThrow(modelId);
         Money price = modelFile.getPrice();
         if (Objects.isNull(price) || Objects.isNull(price.getValue())) {
-            throw new FreeModelFileException("Model can't be added to cart. It's free now");
+            throw new ModelFileIsFreeException("Model can't be added to cart. It's free now");
         }
 
         redisUserService.saveToCart(modelId, currentUser.getRedisUserId().toString());
