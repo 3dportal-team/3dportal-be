@@ -36,8 +36,6 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-  api-docs:
-    path: /docs # TODO нужно ли это?
 
 vk:
   cloud:

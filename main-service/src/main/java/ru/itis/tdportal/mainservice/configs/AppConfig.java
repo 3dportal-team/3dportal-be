@@ -8,7 +8,6 @@ import ru.itis.tdportal.core.configs.PortalCoreConfig;
 import ru.itis.tdportal.liquibase.configs.LiquibaseConfig;
 
 @Configuration
-@OpenAPIDefinition
 @Import({PortalCoreConfig.class, LiquibaseConfig.class, OpenFeignConfig.class})
 public class AppConfig {
 

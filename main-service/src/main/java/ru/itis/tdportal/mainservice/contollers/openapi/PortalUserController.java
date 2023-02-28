@@ -1,4 +1,4 @@
-package ru.itis.tdportal.mainservice.contollers;
+package ru.itis.tdportal.mainservice.contollers.openapi;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;

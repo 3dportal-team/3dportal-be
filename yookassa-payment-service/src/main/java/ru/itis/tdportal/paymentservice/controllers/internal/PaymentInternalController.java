@@ -1,20 +1,20 @@
-package ru.itis.tdportal.paymentservice.controllers;
+package ru.itis.tdportal.paymentservice.controllers.internal;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.tdportal.common.clients.constants.HttpHeader;
 import ru.itis.tdportal.common.models.dtos.PaymentDto;
 import ru.itis.tdportal.paymentservice.dtos.CreatedPaymentDto;
-import ru.itis.tdportal.paymentservice.dtos.YookassaNotificationDto;
 import ru.itis.tdportal.paymentservice.services.PaymentService;
 
-import java.util.Map;
 import java.util.UUID;
 
+@Hidden
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/payment")
-public class PaymentController {
+@RequestMapping("/internal/api/payment")
+public class PaymentInternalController {
 
     private final PaymentService paymentService;
 
@@ -24,18 +24,5 @@ public class PaymentController {
             @RequestHeader(name = HttpHeader.IdempotenceKey) UUID idempotenceKey,
             @RequestBody PaymentDto dto) {
         return paymentService.savePayment(dto, idempotenceKey);
-    }
-
-    @PutMapping("/{idempotenceKey}")
-    public Map<String, String> movePaymentToStatusPending(
-            @PathVariable UUID idempotenceKey) {
-        return paymentService.movePaymentToStatusPending(idempotenceKey);
-    }
-
-    @PostMapping("/notify")
-    // TODO: это должно быть external
-    // TODO: добавить проверку адресов
-    public void movePaymentToStatus(@RequestBody YookassaNotificationDto dto) {
-        paymentService.movePaymentToStatusByEvent(dto); // TODO: может быть refund
     }
 }

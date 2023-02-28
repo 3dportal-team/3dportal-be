@@ -1,4 +1,4 @@
-package ru.itis.tdportal.mainservice.contollers;
+package ru.itis.tdportal.mainservice.contollers.openapi;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;

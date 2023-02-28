@@ -1,4 +1,4 @@
-package ru.itis.tdportal.paymentservice.controllers;
+package ru.itis.tdportal.paymentservice.controllers.openapi;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;

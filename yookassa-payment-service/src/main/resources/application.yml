@@ -37,4 +37,3 @@ yookassa:
       id: ${YOOKASSA_AGENT_ID}
       secret-key: ${YOOKASSA_AGENT_SECRET_KEY}
   return-url: ${YOOKASSA_RETURN_URL}
-

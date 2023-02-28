@@ -1,4 +1,4 @@
-package ru.itis.tdportal.mainservice.contollers;
+package ru.itis.tdportal.mainservice.contollers.openapi;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +25,4 @@ public class OrderBatchController {
         return orderBatchService.createOrderBatchDraft();
     }
 
-    @PostMapping("/{idempotenceKey}")
-    //TODO: должно быть internal
-    public void updateOrderBatchStatus(@PathVariable UUID idempotenceKey,
-                                       @RequestParam PaymentStatus status) {
-        orderBatchService.updateOrderBatchStatus(idempotenceKey, status);
-    }
 }
