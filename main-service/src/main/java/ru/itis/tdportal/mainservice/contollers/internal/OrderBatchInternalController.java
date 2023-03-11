@@ -11,7 +11,7 @@ import java.util.UUID;
 @Hidden
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/order")
+@RequestMapping("/internal/api/order")
 public class OrderBatchInternalController {
 
     private final OrderBatchService orderBatchService;
