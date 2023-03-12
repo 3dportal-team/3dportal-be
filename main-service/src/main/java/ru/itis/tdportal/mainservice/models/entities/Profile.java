@@ -6,10 +6,10 @@ import javax.persistence.*;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Profile {
 
     @Id

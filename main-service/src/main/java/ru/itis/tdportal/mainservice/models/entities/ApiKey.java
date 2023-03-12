@@ -10,9 +10,9 @@ import java.util.Objects;
 @Setter
 @ToString
 @Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class ApiKey {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

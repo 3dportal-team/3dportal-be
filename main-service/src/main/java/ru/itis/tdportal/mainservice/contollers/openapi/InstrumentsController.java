@@ -19,17 +19,13 @@ public class InstrumentsController {
     private final ModelService modelService;
     private final InstrumentService instrumentService;
 
-    @GetMapping(value = "/models/model--{generatedName}")
-    public ModelFileDto getModelByGeneratedName(
-            @PathVariable String generatedName
-    ) {
+    @GetMapping(value = "/models/model--{generatedName}") // FIXME: 12.03.2023 
+    public ModelFileDto getModelByGeneratedName(@PathVariable String generatedName) {
         return modelService.getModelByGeneratedName(generatedName);
     }
 
     @PostMapping
-    public Boolean createInstrument(
-            @RequestBody InstrumentFormDto instrumentForm
-    ) {
+    public Boolean createInstrument(@RequestBody InstrumentFormDto instrumentForm) {
         return instrumentService.createInstrument(instrumentForm);
     }
 

@@ -37,25 +37,22 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
                     .withIssuer(issuer)
                     .build();
             decodedJWT = verifier.verify(token);
+            Long id = Long.valueOf(decodedJWT.getSubject());
+            String email = decodedJWT.getClaim("email").asString();
+            PortalUserRole role = PortalUserRole.valueOf(decodedJWT.getClaim("role").asString());
+            String redisUserID = decodedJWT.getClaim("redisUserId").asString();
+
+            PortalUserDto user = new PortalUserDto();
+            user.setId(id);
+            user.setEmail(email);
+            user.setUserRole(role);
+            user.setRedisUserId(UUID.fromString(redisUserID));
+            UserDetails userDetails = new UserDetailsImpl(user);
+            authentication.setAuthenticated(true);
+            ((JwtAuthentication) authentication).setUserDetails(userDetails);
         } catch (Exception e) {
             authentication.setAuthenticated(false);
-
-            throw new AuthenticationException("Bad token");
         }
-
-        Long id = Long.valueOf(decodedJWT.getSubject());
-        String email = decodedJWT.getClaim("email").asString();
-        PortalUserRole role = PortalUserRole.valueOf(decodedJWT.getClaim("role").asString());
-        String redisUserID = decodedJWT.getClaim("redisUserId").asString();
-
-        PortalUserDto user = new PortalUserDto();
-        user.setId(id);
-        user.setEmail(email);
-        user.setUserRole(role);
-        user.setRedisUserId(UUID.fromString(redisUserID));
-        UserDetails userDetails = new UserDetailsImpl(user);
-        authentication.setAuthenticated(true);
-        ((JwtAuthentication) authentication).setUserDetails(userDetails);
         return authentication;
     }
 
