@@ -9,7 +9,7 @@ import ru.itis.tdportal.common.models.dtos.PaymentDto;
 
 import java.util.UUID;
 
-@FeignClient(name = "yoo-payment-service", url = "http://localhost:8082/internal") // TODO: убрать
+@FeignClient(name = "yoo-payment-service", url = "http://host.docker.internal:8082/internal") // TODO: убрать
 public interface YooPaymentServiceClient {
 
     @RequestMapping(method = RequestMethod.POST, value = "/api/payment")
