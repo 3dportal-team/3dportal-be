@@ -8,6 +8,7 @@ import ru.itis.tdportal.common.models.enums.PaymentStatus;
 import ru.itis.tdportal.mainservice.dtos.CartDto;
 import ru.itis.tdportal.mainservice.dtos.OrderBatchDto;
 import ru.itis.tdportal.mainservice.dtos.OrderBatchItemDto;
+import ru.itis.tdportal.mainservice.models.entities.ModelFile;
 import ru.itis.tdportal.mainservice.models.entities.OrderBatch;
 import ru.itis.tdportal.mainservice.models.enums.OrderBatchStatus;
 import ru.itis.tdportal.mainservice.models.exceptions.OrderBatchNotFoundException;
@@ -25,7 +26,10 @@ import java.util.stream.Collectors;
 public class OrderBatchService {
 
     private final YooPaymentServiceClient client;
+
     private final CartService cartService;
+    private final ModelFileAccessService accessService;
+
     private final OrderBatchRepository repository;
     private final OrderBatchMapper orderBatchMapper;
 
@@ -75,6 +79,10 @@ public class OrderBatchService {
         switch (status) {
             case SUCCEEDED:
                 order.setStatus(OrderBatchStatus.PAID);
+                order.getOrderBatchItems().forEach(orderItem -> {
+                    ModelFile modelFile = orderItem.getId().getModelFile();
+                    accessService.saveAccess(modelFile, order.getCreatorId());
+                });
                 break;
             case CANCELED:
                 order.setStatus(OrderBatchStatus.ERROR);

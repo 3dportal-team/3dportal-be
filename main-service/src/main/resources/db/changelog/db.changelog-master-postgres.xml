@@ -10,5 +10,6 @@
     <include relativeToChangelogFile="true" file="changes-postgres/changelog.0.1.3.xml"/>
     <include relativeToChangelogFile="true" file="changes-postgres/changelog.0.1.4.xml"/>
     <include relativeToChangelogFile="true" file="changes-postgres/changelog.0.1.5.xml"/>
+    <include relativeToChangelogFile="true" file="changes-postgres/changelog.0.1.6.xml"/>
 
 </databaseChangeLog>

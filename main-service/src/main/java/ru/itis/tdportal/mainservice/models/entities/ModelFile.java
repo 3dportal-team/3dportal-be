@@ -5,13 +5,14 @@ import ru.itis.tdportal.common.models.entities.Money;
 import ru.itis.tdportal.core.models.entities.Audit;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString(exclude = "ownerId") // TODO: это зачем?
 public class ModelFile extends Audit<Long> {
 
@@ -37,4 +38,7 @@ public class ModelFile extends Audit<Long> {
     @AttributeOverride(name = "value", column = @Column(name = "price_value"))
     @AttributeOverride(name = "currency", column = @Column(name = "price_currency"))
     private Money price;
+
+    @OneToMany(mappedBy = "modelFile")
+    private List<ModelFileAccess> accesses;
 }

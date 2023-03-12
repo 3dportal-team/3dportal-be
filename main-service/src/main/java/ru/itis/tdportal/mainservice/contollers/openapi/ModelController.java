@@ -30,34 +30,25 @@ public class ModelController {
 
     @GetMapping
     @Operation(description = "Получение списка моделей с пагинацией")
-    public Page<ModelFileDto> getModels(
-            Pageable pageable
-    ) {
+    public Page<ModelFileDto> getModels(Pageable pageable) {
         return modelService.getModels(pageable);
     }
 
-    @GetMapping(value = "/{userId}")
+    @GetMapping(value = "/{userId}") // FIXME: 12.03.2023 
     @Operation(description = "Получение модели по идентификатору пользователя")
-    public ResponseEntity<?> getModelsByUserId(
-            @PathVariable Long userId
-    ) {
-        List<ModelFileDto> modelFiles = modelService.getModelsByUserId(userId);
-        return ResponseEntity.ok(modelFiles);
+    public List<ModelFileDto> getModelsByUserId(@PathVariable Long userId) {
+        return modelService.getModelsByUserId(userId);
     }
 
     @GetMapping(value = "/model--{generatedName}")
     @Operation(description = "Получение модели по её сгенерированному имени")
-    public ResponseEntity<?> getModelByGeneratedName(
-            @PathVariable String generatedName
-    ) {
-        ModelFileDto modelFileDto = modelService.getModelByGeneratedName(generatedName);
-        return ResponseEntity.ok(modelFileDto);
+    public ModelFileDto getModelByGeneratedName(@PathVariable String generatedName) {
+        return modelService.getModelByGeneratedName(generatedName);
     }
 
+    @PutMapping("/{modelId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(description = "Обновление модели по её идентификатору")
-    @PutMapping("/{modelId}")
-    //TODO: добавить проверку доступа на редактирование
     public ModelFileDto updateModel(@PathVariable Long modelId,
                                     @RequestBody ModelFileDto dto) {
         dto.setId(modelId);

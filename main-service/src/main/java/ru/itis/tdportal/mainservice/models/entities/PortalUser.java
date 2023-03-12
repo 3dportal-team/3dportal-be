@@ -12,9 +12,9 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class PortalUser implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,4 +36,7 @@ public class PortalUser implements Serializable {
 
     @Column(name = "redis_user_id")
     private UUID redisUserId;
+
+    @OneToMany(mappedBy = "user")
+    private List<ModelFileAccess> accesses;
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="17" author="Diana.Monzhosova">
+        <createTable tableName="model_file_access">
+            <column name="id" type="BIGINT" autoIncrement="true" remarks="Идентификатор">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_model_file_access"/>
+            </column>
+            <column name="model_file_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_model_file_access_model_file_id" references="model_file(id)"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_model_file_access_portal_user_id" references="portal_user(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
