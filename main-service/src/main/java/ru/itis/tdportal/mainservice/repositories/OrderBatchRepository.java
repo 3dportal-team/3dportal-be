@@ -16,5 +16,4 @@ public interface OrderBatchRepository extends JpaRepository<OrderBatch, Long> {
 
     Optional<OrderBatch> findByUuid(UUID uuid);
 
-    List<OrderBatch> findAllByStatusInAn();
 }
