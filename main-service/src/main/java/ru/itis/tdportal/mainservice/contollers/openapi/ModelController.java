@@ -40,6 +40,7 @@ public class ModelController {
         return modelService.getModelsByUserId(userId);
     }
 
+    @PreAuthorize("isAuthenticated() || isAnonymous()")
     @GetMapping(value = "/model--{generatedName}")
     @Operation(description = "Получение модели по её сгенерированному имени")
     public ModelFileDto getModelByGeneratedName(@PathVariable String generatedName) {
