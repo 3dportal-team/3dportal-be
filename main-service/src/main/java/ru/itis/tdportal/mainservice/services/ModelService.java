@@ -62,6 +62,7 @@ public class ModelService {
                     dto.getId(),
                     currentUser.getId()
             );
+            currentUserId = currentUser.getId();
             dto.setIsPurchased(isPurchased);
         } else {
             dto.setIsPurchased(false);
