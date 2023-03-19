@@ -20,6 +20,6 @@ public class BankCardDto {
     private String issuerName;
     private String last4;
 
-    @JsonProperty(value = "payout_token", access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(value = "payout_token")
     private String payoutToken;
 }
