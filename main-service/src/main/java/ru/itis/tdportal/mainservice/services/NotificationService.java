@@ -47,8 +47,8 @@ public class NotificationService {
                 .builder(mapper.toDto(savedNotification))
                 .build();
 
-        if (subscriptions.containsKey(dto.getUserId())) {
-            subscriptions.get(dto.getUserId())
+        if (subscriptions.containsKey(dto.getReceiverId())) {
+            subscriptions.get(dto.getReceiverId())
                     .getFluxSink()
                     .next(event);
         }
