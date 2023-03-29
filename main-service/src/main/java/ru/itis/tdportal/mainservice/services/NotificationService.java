@@ -28,7 +28,7 @@ public class NotificationService {
 
     @Transactional(readOnly = true)
     public Flux<NotificationDto> asyncFindByUserId(Long userId) {
-        List<NotificationDto> dtos = repository.findAllByUserId(userId).stream()
+        List<NotificationDto> dtos = repository.findAllByReceiverId(userId).stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
 
