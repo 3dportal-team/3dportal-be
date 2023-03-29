@@ -6,16 +6,19 @@ import ru.itis.tdportal.common.clients.feign.YooPaymentServiceClient;
 import ru.itis.tdportal.common.models.dtos.PaymentDto;
 import ru.itis.tdportal.common.models.enums.PaymentStatus;
 import ru.itis.tdportal.mainservice.dtos.CartDto;
+import ru.itis.tdportal.mainservice.dtos.NotificationDto;
 import ru.itis.tdportal.mainservice.dtos.OrderBatchDto;
 import ru.itis.tdportal.mainservice.dtos.OrderBatchItemDto;
 import ru.itis.tdportal.mainservice.models.entities.ModelFile;
 import ru.itis.tdportal.mainservice.models.entities.OrderBatch;
+import ru.itis.tdportal.mainservice.models.enums.NotificationType;
 import ru.itis.tdportal.mainservice.models.enums.OrderBatchStatus;
 import ru.itis.tdportal.mainservice.models.exceptions.OrderBatchNotFoundException;
 import ru.itis.tdportal.mainservice.models.mappers.OrderBatchMapper;
 import ru.itis.tdportal.mainservice.repositories.OrderBatchRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -29,6 +32,7 @@ public class OrderBatchService {
 
     private final CartService cartService;
     private final ModelFileAccessService accessService;
+    private final NotificationService notificationService;
 
     private final OrderBatchRepository repository;
     private final OrderBatchMapper orderBatchMapper;
@@ -82,6 +86,16 @@ public class OrderBatchService {
                 order.getOrderBatchItems().forEach(orderItem -> {
                     ModelFile modelFile = orderItem.getId().getModelFile();
                     accessService.saveAccess(modelFile, order.getCreatorId());
+
+                    NotificationDto dto = new NotificationDto(); // TODO: вынести
+                    dto.setUserId(modelFile.getOwner().getId());
+                    dto.setType(NotificationType.TO_SELLER_MODEL_PURCHASED);
+                    dto.setText(String.format(
+                            NotificationType.TO_SELLER_MODEL_PURCHASED.getMessage(),
+                            List.of(modelFile.getId()).toArray())
+                    );
+
+                    notificationService.sendAndSave(dto);
                 });
                 break;
             case CANCELED:

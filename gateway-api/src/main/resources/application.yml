@@ -19,3 +19,7 @@ spring:
             - StripPrefix=1
   main:
     web-application-type: reactive
+
+ws:
+  client:
+    uri: lb://${MAIN_SERVICE_HOST}:${MAIN_SERVICE_PORT}/ws/
