@@ -93,11 +93,11 @@ public class PaymentService {
 
         if (PaymentStatus.SUCCEEDED.equals(status)) {
             PayoutDto payoutDto = new PayoutDto();
-            payoutDto.setPaymentMethodId(payment.getReceiver().getPayoutToken());
+            payoutDto.setPayoutToken(payment.getReceiver().getPayoutToken());
 
             Money paymentAmount = payment.getAmount();
             // TODO: должна быть нормальная формула для расчета выплаты по заказу
-            payoutDto.setAmount(new MoneyDto(paymentAmount.getValue() * 0.7, paymentAmount.getCurrency()) );
+            payoutDto.setAmount(new MoneyDto(paymentAmount.getValue(), paymentAmount.getCurrency()) );
 
             payoutDto.setDescription(String.format("Выплата по заказу %s", payment.getIdempotenceKey()));
 
