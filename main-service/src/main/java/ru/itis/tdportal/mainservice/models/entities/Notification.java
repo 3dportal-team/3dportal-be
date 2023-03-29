@@ -14,6 +14,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
+@Audited
 @AllArgsConstructor
 @NoArgsConstructor
 public class Notification {
@@ -35,7 +36,7 @@ public class Notification {
 
     private String text;
 
-    @Audited
+    @CreatedDate
     @Column(name = "created_at")
     protected Instant createdAt;
 }
