@@ -88,7 +88,7 @@ public class OrderBatchService {
                     accessService.saveAccess(modelFile, order.getCreatorId());
 
                     NotificationDto dto = new NotificationDto(); // TODO: вынести
-                    dto.setUserId(modelFile.getOwner().getId());
+                    dto.setReceiverId(modelFile.getOwner().getId());
                     dto.setType(NotificationType.TO_SELLER_MODEL_PURCHASED);
                     dto.setText(String.format(
                             NotificationType.TO_SELLER_MODEL_PURCHASED.getMessage(),

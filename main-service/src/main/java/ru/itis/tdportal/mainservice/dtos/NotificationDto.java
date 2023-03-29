@@ -13,7 +13,7 @@ public class NotificationDto {
     private Long id;
 
     @JsonIgnore
-    private Long userId;
+    private Long receiverId;
 
     private NotificationType type;
 
