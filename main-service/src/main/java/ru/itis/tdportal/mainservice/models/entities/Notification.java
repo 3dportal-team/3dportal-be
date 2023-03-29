@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedDate;
 import ru.itis.tdportal.mainservice.models.enums.NotificationType;
 
@@ -34,7 +35,7 @@ public class Notification {
 
     private String text;
 
-    @CreatedDate
+    @Audited
     @Column(name = "created_at")
     protected Instant createdAt;
 }
