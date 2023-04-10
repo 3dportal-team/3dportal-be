@@ -10,6 +10,8 @@ import reactor.core.publisher.Flux;
 import ru.itis.tdportal.mainservice.dtos.NotificationDto;
 import ru.itis.tdportal.mainservice.services.NotificationService;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class NotificationController {
@@ -19,7 +21,7 @@ public class NotificationController {
     @GetMapping(path = "/ws/user/{userId}/notification", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ServerSentEvent> getKey(@PathVariable Long userId) {
         return Flux.create(fluxSink -> {
-                    Flux<NotificationDto> notificationDtos = service.asyncFindByUserId(userId);
+                    List<NotificationDto> notificationDtos = service.findByUserId(userId);
                     service.subscribe(fluxSink, userId);
                     fluxSink.next(ServerSentEvent.builder()
                             .data(notificationDtos)

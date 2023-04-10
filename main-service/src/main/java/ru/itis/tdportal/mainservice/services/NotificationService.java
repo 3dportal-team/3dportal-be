@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 import ru.itis.tdportal.mainservice.dtos.NotificationDto;
 import ru.itis.tdportal.mainservice.models.SubscriptionData;
@@ -27,12 +26,10 @@ public class NotificationService {
     Map<Long, SubscriptionData> subscriptions = new ConcurrentHashMap<>();
 
     @Transactional(readOnly = true)
-    public Flux<NotificationDto> asyncFindByUserId(Long userId) {
-        List<NotificationDto> dtos = repository.findAllByReceiverId(userId).stream()
+    public List<NotificationDto> findByUserId(Long userId) {
+        return repository.findAllByReceiverId(userId).stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
-
-        return Flux.fromIterable(dtos);
     }
 
     public void subscribe(FluxSink<ServerSentEvent> sink, Long userId) {
