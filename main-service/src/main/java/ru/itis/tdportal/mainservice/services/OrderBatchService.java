@@ -11,6 +11,7 @@ import ru.itis.tdportal.mainservice.dtos.OrderBatchDto;
 import ru.itis.tdportal.mainservice.dtos.OrderBatchItemDto;
 import ru.itis.tdportal.mainservice.models.entities.ModelFile;
 import ru.itis.tdportal.mainservice.models.entities.OrderBatch;
+import ru.itis.tdportal.mainservice.models.enums.ModelToUserRelation;
 import ru.itis.tdportal.mainservice.models.enums.NotificationType;
 import ru.itis.tdportal.mainservice.models.enums.OrderBatchStatus;
 import ru.itis.tdportal.mainservice.models.exceptions.OrderBatchNotFoundException;
@@ -85,7 +86,7 @@ public class OrderBatchService {
                 order.setStatus(OrderBatchStatus.PAID);
                 order.getOrderBatchItems().forEach(orderItem -> {
                     ModelFile modelFile = orderItem.getId().getModelFile();
-                    accessService.saveAccess(modelFile, order.getCreatorId());
+                    accessService.saveAccess(modelFile, order.getCreatorId(), ModelToUserRelation.AVAILABLE_FOR_DOWNLOADING);
 
                     NotificationDto dto = new NotificationDto(); // TODO: вынести
                     dto.setReceiverId(modelFile.getOwner().getId());

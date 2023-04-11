@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="20" author="Diana.Monzhosova">
+        <addColumn tableName="model_file_access">
+            <column name="relation" type="VARCHAR(25)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="21" author="Diana.Monzhosova">
+        <sql>
+            UPDATE model_file_access access
+            SET relation = CASE WHEN access.user_id = model.owner_id THEN 'UPLOADED' ELSE 'AVAILABLE_FOR_DOWNLOADING' END
+            FROM model_file model WHERE access.model_file_id = model.id;
+        </sql>
+    </changeSet>
+
+    <changeSet id="22" author="Diana.Monzhosova">
+        <addNotNullConstraint tableName="model_file_access" columnName="relation"/>
+    </changeSet>
+</databaseChangeLog>

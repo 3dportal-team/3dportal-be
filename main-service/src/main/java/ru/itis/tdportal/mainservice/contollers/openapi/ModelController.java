@@ -5,14 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.tdportal.mainservice.dtos.ModelFileDto;
 import ru.itis.tdportal.mainservice.dtos.forms.ModelFileUploadFormDto;
 import ru.itis.tdportal.mainservice.services.ModelService;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,12 +29,6 @@ public class ModelController {
     @Operation(description = "Получение списка моделей с пагинацией")
     public Page<ModelFileDto> getModels(Pageable pageable) {
         return modelService.getModels(pageable);
-    }
-
-    @GetMapping(value = "/{userId}") // FIXME: 12.03.2023 
-    @Operation(description = "Получение модели по идентификатору пользователя")
-    public List<ModelFileDto> getModelsByUserId(@PathVariable Long userId) {
-        return modelService.getModelsByUserId(userId);
     }
 
     @PreAuthorize("isAuthenticated() || isAnonymous()")

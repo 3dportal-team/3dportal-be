@@ -10,15 +10,17 @@ import ru.itis.tdportal.mainservice.dtos.ModelFileDto;
 import ru.itis.tdportal.mainservice.dtos.forms.ModelFileUploadFormDto;
 import ru.itis.tdportal.mainservice.models.entities.ModelFile;
 import ru.itis.tdportal.mainservice.models.entities.ModelFileBucket;
-import ru.itis.tdportal.mainservice.models.entities.PortalUser;
 import ru.itis.tdportal.mainservice.models.enums.ModelToUserRelation;
 import ru.itis.tdportal.mainservice.models.exceptions.ModelFileAccessException;
 import ru.itis.tdportal.mainservice.models.exceptions.ModelFileNotFoundException;
+import ru.itis.tdportal.mainservice.models.filters.ModelFilter;
 import ru.itis.tdportal.mainservice.models.mappers.ModelFileMapper;
 import ru.itis.tdportal.mainservice.repositories.ModelFileRepository;
+import ru.itis.tdportal.mainservice.repositories.specifications.ModelFileSpecification;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +33,7 @@ public class ModelService {
     private final ModelFileRepository modelFileRepository;
     private final ModelFileBucketRepository modelFileBucketRepository;
     private final ModelFileMapper modelFileMapper;
+    private final ModelFileSpecification specification;
 
     @Transactional
     public ModelFileDto saveModel(ModelFileUploadFormDto uploadFormDto) {
@@ -43,7 +46,9 @@ public class ModelService {
         ModelFile modelFile = modelFileMapper.toModelFileEntity(uploadFormDto);
         modelFile.setEntityTag(newBucket.getEntityTag());
 
-        return modelFileMapper.toDto(modelFileRepository.save(modelFile));
+        ModelFile savedModelFile = modelFileRepository.save(modelFile);
+        modelFileAccessService.saveAccess(savedModelFile, currentUser.getId(), ModelToUserRelation.UPLOADED);
+        return modelFileMapper.toDto(savedModelFile);
     }
 
     @Transactional(readOnly = true)
@@ -82,11 +87,12 @@ public class ModelService {
     }
 
     @Transactional(readOnly = true)
-    public List<ModelFileDto> getModelsByUserId(Long userId) {
-        PortalUser portalUser = portalUserService.getByIdOrElseThrow(userId);
-        List<ModelFile> userModelFiles = portalUser.getModels();
-
-        return modelFileMapper.toListDto(userModelFiles);
+    public List<ModelFileDto> getModelsByFilter(ModelFilter filter) {
+        portalUserService.getByIdOrElseThrow(filter.getUserId());
+        List<ModelFile> modelFiles = modelFileRepository.findAll(specification.byFilter(filter));
+        return modelFileMapper.toListDto(modelFiles).stream()
+                .peek(model -> model.setUserRelation(filter.getUserRelation()))
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

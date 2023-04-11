@@ -1,6 +1,7 @@
 package ru.itis.tdportal.mainservice.models.entities;
 
 import lombok.*;
+import lombok.experimental.FieldNameConstants;
 import ru.itis.tdportal.common.models.entities.Money;
 import ru.itis.tdportal.core.models.entities.Audit;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldNameConstants
 @ToString(exclude = "ownerId") // TODO: это зачем?
 public class ModelFile extends Audit<Long> {
 

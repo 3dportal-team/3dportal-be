@@ -1,6 +1,7 @@
 package ru.itis.tdportal.mainservice.models.entities;
 
 import lombok.*;
+import lombok.experimental.FieldNameConstants;
 import ru.itis.tdportal.core.models.enums.PortalUserRole;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @Setter
 @ToString
 @Builder
+@FieldNameConstants
 @AllArgsConstructor
 @NoArgsConstructor
 public class PortalUser implements Serializable {
