@@ -1,5 +1,6 @@
 FROM openjdk:11-jre
 WORKDIR /app
+USER portal
 
 COPY target/dependency /app/dependency
 COPY target/main-service-*.jar /app/
