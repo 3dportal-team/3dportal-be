@@ -17,10 +17,9 @@ services:
     volumes:
       - ./docker/db-postgres/postgresql.conf:/etc/postgresql/postgresql.conf
       - ./docker/db-postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
-    ports:
-      - ${POSTGRES_PORT}:5432
     networks:
-      - net
+      net:
+        - ipv4_address: 172.20.0.4
     security_opt:
       - no-new-privileges:true
 
@@ -33,10 +32,9 @@ services:
     depends_on:
       - 3dportal-gateway-api
       - 3dportal-postgres
-    ports:
-      - ${MAIN_SERVICE_PORT}:${MAIN_SERVICE_PORT}
     networks:
-      - net
+      net:
+        - ipv4_address: 172.20.0.2
     security_opt:
       - no-new-privileges:true
 
@@ -50,10 +48,10 @@ services:
       - 3dportal-gateway-api
       - 3dportal-postgres
     ports:
-      - ${PAYMENT_SERVICE_PORT}:${PAYMENT_SERVICE_PORT}
       - ${PAYMENT_SERVICE_HTTPS_PORT}:${PAYMENT_SERVICE_HTTPS_PORT}
     networks:
-      - net
+      net:
+        - ipv4_address: 172.20.0.3
     security_opt:
       - no-new-privileges:true
 
@@ -66,7 +64,8 @@ services:
     ports:
       - ${GATEWAY_API_PORT}:${GATEWAY_API_PORT}
     networks:
-      - net
+      net:
+        - ipv4_address: 172.20.0.1
     security_opt:
       - no-new-privileges:true
 
@@ -76,8 +75,6 @@ services:
     restart: unless-stopped
     command: >
       --requirepass ${REDIS_PASSWORD}
-    ports:
-      - ${REDIS_PORT}:${REDIS_PORT}
     env_file:
       - .env
     environment:
@@ -85,7 +82,8 @@ services:
     volumes:
       - 3dportal-redis:/data
     networks:
-      - net
+      net:
+        - ipv4_address: 172.20.0.5
     security_opt:
       - no-new-privileges:true
 
@@ -95,3 +93,7 @@ volumes:
 
 networks:
   net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
