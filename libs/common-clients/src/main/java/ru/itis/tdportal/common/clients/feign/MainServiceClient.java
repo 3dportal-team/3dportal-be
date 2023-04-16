@@ -9,7 +9,7 @@ import ru.itis.tdportal.common.models.enums.PaymentStatus;
 
 import java.util.UUID;
 
-@FeignClient(name = "main-service", url = "http://188.225.10.182:8081/internal") // TODO: убрать
+@FeignClient(name = "main-service", url = "${services.main-service.url}") // TODO: переделать
 public interface MainServiceClient {
 
     //TODO: переделать урл
