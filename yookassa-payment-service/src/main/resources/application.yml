@@ -37,3 +37,9 @@ yookassa:
       id: ${YOOKASSA_AGENT_ID}
       secret-key: ${YOOKASSA_AGENT_SECRET_KEY}
   return-url: ${YOOKASSA_RETURN_URL}
+
+services:
+  main-service:
+    url: http://${MAIN_SERVICE_HOST}:${MAIN_SERVICE_PORT}/internal
+  payment-service:
+    url: http://${PAYMENT_SERVICE_HOST}:${PAYMENT_SERVICE_}/internal
