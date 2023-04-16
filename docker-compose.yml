@@ -18,8 +18,7 @@ services:
       - ./docker/db-postgres/postgresql.conf:/etc/postgresql/postgresql.conf
       - ./docker/db-postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      net:
-        - ipv4_address: 172.20.0.4
+      - net
     security_opt:
       - no-new-privileges:true
 
@@ -33,8 +32,7 @@ services:
       - 3dportal-gateway-api
       - 3dportal-postgres
     networks:
-      net:
-        - ipv4_address: 172.20.0.2
+      - net
     security_opt:
       - no-new-privileges:true
 
@@ -50,8 +48,7 @@ services:
     ports:
       - ${PAYMENT_SERVICE_HTTPS_PORT}:${PAYMENT_SERVICE_HTTPS_PORT}
     networks:
-      net:
-        - ipv4_address: 172.20.0.3
+      - net
     security_opt:
       - no-new-privileges:true
 
@@ -64,8 +61,7 @@ services:
     ports:
       - ${GATEWAY_API_PORT}:${GATEWAY_API_PORT}
     networks:
-      net:
-        - ipv4_address: 172.20.0.1
+      - net
     security_opt:
       - no-new-privileges:true
 
@@ -82,8 +78,7 @@ services:
     volumes:
       - 3dportal-redis:/data
     networks:
-      net:
-        - ipv4_address: 172.20.0.5
+      - net
     security_opt:
       - no-new-privileges:true
 
@@ -94,6 +89,3 @@ volumes:
 networks:
   net:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
