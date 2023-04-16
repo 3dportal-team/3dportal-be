@@ -21,6 +21,8 @@ services:
       - ${POSTGRES_PORT}:5432
     networks:
       - net
+    security_opt:
+      - no-new-privileges:true
 
   3dportal-main-service:
     image: 3dportal-main-service:${DOCKER_TAG}
@@ -35,6 +37,8 @@ services:
       - ${MAIN_SERVICE_PORT}:${MAIN_SERVICE_PORT}
     networks:
       - net
+    security_opt:
+      - no-new-privileges:true
 
   3dportal-yookassa-payment-service:
     image: 3dportal-yookassa-payment-service:${DOCKER_TAG}
@@ -50,6 +54,8 @@ services:
       - ${PAYMENT_SERVICE_HTTPS_PORT}:${PAYMENT_SERVICE_HTTPS_PORT}
     networks:
       - net
+    security_opt:
+      - no-new-privileges:true
 
   3dportal-gateway-api:
     image: 3dportal-gateway-api:${DOCKER_TAG}
@@ -61,6 +67,8 @@ services:
       - ${GATEWAY_API_PORT}:${GATEWAY_API_PORT}
     networks:
       - net
+    security_opt:
+      - no-new-privileges:true
 
   3dportal_redis:
     image: redis:7.0
@@ -78,6 +86,8 @@ services:
       - 3dportal-redis:/data
     networks:
       - net
+    security_opt:
+      - no-new-privileges:true
 
 volumes:
   3dportal-postgres-data:
