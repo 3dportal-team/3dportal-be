@@ -65,7 +65,7 @@ services:
     security_opt:
       - no-new-privileges:true
 
-  3dportal_redis:
+  3dportal-redis:
     image: redis:7.0
     container_name: 3dportal-redis
     restart: unless-stopped

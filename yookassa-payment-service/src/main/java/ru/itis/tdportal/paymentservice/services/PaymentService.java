@@ -119,7 +119,10 @@ public class PaymentService {
             );
         } catch (Exception e) {
             log.error(String.format(
-                    "Payment moving %s to status %s failed causing: %s", dto.getEvent()
+                    "Payment moving with YOOID %s to status %s failed causing: %s",
+                    dto.getObject().getId(),
+                    dto.getEvent().getObjectStatus(),
+                    e.getMessage()
             ));
         }
     }
