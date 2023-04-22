@@ -107,7 +107,6 @@ public class PaymentService {
                 payoutDto.setPayoutToken(payment.getReceiver().getPayoutToken());
 
                 Money paymentAmount = payment.getAmount();
-
                 payoutDto.setAmount(new MoneyDto(paymentAmount.getValue(), paymentAmount.getCurrency()));
                 payoutDto.setDescription(String.format("Выплата по заказу %s", payment.getIdempotenceKey()));
 
