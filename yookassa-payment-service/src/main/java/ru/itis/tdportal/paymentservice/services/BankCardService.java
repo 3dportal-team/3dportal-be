@@ -19,6 +19,7 @@ public class BankCardService {
     public void save(Long userId, BankCardDto bankCardDto) {
         BankCard bankCard = repository.findBankCardByCreatorId(userId).orElse(new BankCard());
         mapper.merge(bankCard, bankCardDto);
+        bankCard.setCreatorId(userId); // FIXME: 23.04.2023  
         repository.save(bankCard);
     }
 

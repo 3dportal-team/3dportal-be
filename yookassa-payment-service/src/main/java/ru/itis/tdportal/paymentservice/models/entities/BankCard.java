@@ -31,6 +31,4 @@ public class BankCard extends Audit<Long> {
 
     @Column(name = "payout_token")
     private String payoutToken;
-
-    private Long creatorId;
 }
