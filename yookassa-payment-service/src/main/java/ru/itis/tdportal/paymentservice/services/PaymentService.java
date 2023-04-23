@@ -104,7 +104,7 @@ public class PaymentService {
 
             if (PaymentStatus.SUCCEEDED.equals(status)) {
                 PayoutDto payoutDto = new PayoutDto();
-                payoutDto.setPayoutToken(payment.getReceiver().getPayoutToken());
+                payoutDto.setPayoutToken(payment.getBankCard().getPayoutToken());
 
                 Money paymentAmount = payment.getAmount();
                 payoutDto.setAmount(new MoneyDto(paymentAmount.getValue(), paymentAmount.getCurrency()));

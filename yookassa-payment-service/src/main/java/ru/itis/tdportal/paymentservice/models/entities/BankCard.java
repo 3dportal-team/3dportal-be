@@ -32,6 +32,5 @@ public class BankCard extends Audit<Long> {
     @Column(name = "payout_token")
     private String payoutToken;
 
-    @OneToMany(mappedBy = "receiver")
     private Long creatorId;
 }

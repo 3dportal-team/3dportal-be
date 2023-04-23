@@ -37,6 +37,6 @@ public class Payment {
     private UUID yooId;
 
     @ManyToOne
-    @JoinColumn(name = "receiver_id")
-    private BankCard receiver;
+    @JoinColumn(name = "bank_card_id")
+    private BankCard bankCard;
 }
