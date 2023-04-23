@@ -29,6 +29,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
   servlet:
     multipart:
       max-file-size: ${MULTIPART_MAX_FILE_SIZE}
