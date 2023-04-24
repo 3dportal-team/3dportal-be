@@ -47,6 +47,7 @@ public class OrderBatchService {
                 .map(model -> {
                     OrderBatchItemDto item = new OrderBatchItemDto();
                     item.setModelId(model.getId());
+                    item.setReceiverId(model.getOwner().getId());
                     item.setPrice(model.getPrice());
                     return item;
                 })
