@@ -1,5 +1,6 @@
 package ru.itis.tdportal.paymentservice.services;
 
+import liquibase.pro.packaged.P;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,10 +11,8 @@ import ru.itis.tdportal.common.models.dtos.MoneyDto;
 import ru.itis.tdportal.common.models.dtos.PaymentDto;
 import ru.itis.tdportal.common.models.entities.Money;
 import ru.itis.tdportal.common.models.enums.PaymentStatus;
-import ru.itis.tdportal.paymentservice.dtos.CreatedPaymentDto;
-import ru.itis.tdportal.paymentservice.dtos.EventObjectDto;
-import ru.itis.tdportal.paymentservice.dtos.PayoutDto;
-import ru.itis.tdportal.paymentservice.dtos.YookassaNotificationDto;
+import ru.itis.tdportal.paymentservice.dtos.*;
+import ru.itis.tdportal.paymentservice.models.entities.BankCard;
 import ru.itis.tdportal.paymentservice.models.entities.Payment;
 import ru.itis.tdportal.paymentservice.models.enums.ConfirmationType;
 import ru.itis.tdportal.paymentservice.models.exceptions.PaymentNotFoundException;
@@ -37,12 +36,17 @@ public class PaymentService {
     private final PaymentRepository repository;
     private final YookassaService yookassaService;
 
+    private final BankCardService bankCardService;
     private final PayoutService payoutService;
 
     @Transactional
     public CreatedPaymentDto savePayment(PaymentDto dto, UUID idempotenceKey) {
         Payment payment = paymentMapper.toEntity(dto);
+
+        BankCard bankCard = bankCardService.getBankCardOrThrow(dto.getReceiverId());
+        payment.setBankCard(bankCard);
         payment.setIdempotenceKey(idempotenceKey);
+
         return paymentMapper.toDto(repository.save(payment));
     }
 

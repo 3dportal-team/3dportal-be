@@ -17,4 +17,6 @@ public class PaymentDto {
     private MoneyDto amount;
 
     private Boolean paid;
+
+    private Long receiverId;
 }

@@ -10,4 +10,6 @@ public class OrderBatchItemDto {
 
     private MoneyDto price;
 
+    private Long receiverId;
+
 }

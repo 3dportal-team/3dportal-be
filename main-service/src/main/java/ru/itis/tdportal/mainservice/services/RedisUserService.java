@@ -19,7 +19,7 @@ public class RedisUserService {
 
     private final RedisUserRepository repository;
 
-    private RedisUser getRedisUserOrThrow(String redisUserID) {
+    public RedisUser getRedisUserOrThrow(String redisUserID) {
         return repository.findById(redisUserID)
                 .orElseThrow(() -> new RedisUserNotFoundException(
                         String.format("RedisUser isn't found by id=%s", redisUserID)

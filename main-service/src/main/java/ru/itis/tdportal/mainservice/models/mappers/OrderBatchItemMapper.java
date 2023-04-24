@@ -12,9 +12,13 @@ import ru.itis.tdportal.mainservice.models.entities.OrderBatchItem;
 public interface OrderBatchItemMapper {
 
     @Mapping(target = "id.modelFile.id", source = "modelId")
+    @Mapping(target = "id.modelFile.owner.id", source = "receiverId")
+        // FIXME: 24.04.2023 
     OrderBatchItem toEntity(OrderBatchItemDto dto);
 
     @Mapping(target = "modelId", source = "id.modelFile.id")
+    @Mapping(target = "receiverId", source = "id.modelFile.owner.id")
+        // FIXME: 24.04.2023 
     OrderBatchItemDto toDto(OrderBatchItem entity);
 
 }

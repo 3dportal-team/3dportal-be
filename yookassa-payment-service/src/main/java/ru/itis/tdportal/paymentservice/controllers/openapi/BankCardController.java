@@ -23,6 +23,6 @@ public class BankCardController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{userId}/bank-card")
     public BankCardDto getBankCard(@PathVariable("userId") Long userId) { // TODO: проверка доступа к ресурсу
-        return bankCardService.getCurrentUserCard(userId);
+        return bankCardService.getBankCardByUserId(userId);
     }
 }

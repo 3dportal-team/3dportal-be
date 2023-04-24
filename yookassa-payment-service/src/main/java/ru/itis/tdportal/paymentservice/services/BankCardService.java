@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itis.tdportal.paymentservice.dtos.BankCardDto;
 import ru.itis.tdportal.paymentservice.models.entities.BankCard;
+import ru.itis.tdportal.paymentservice.models.exceptions.BankCardNotFouldException;
 import ru.itis.tdportal.paymentservice.models.mappers.BankCardMapper;
 import ru.itis.tdportal.paymentservice.repositories.BankCardRepository;
 
@@ -24,8 +25,16 @@ public class BankCardService {
     }
 
     @Transactional(readOnly = true)
-    public BankCardDto getCurrentUserCard(Long userId) {
+    public BankCardDto getBankCardByUserId(Long userId) {
         BankCard bankCard = repository.findBankCardByCreatorId(userId).orElse(new BankCard());
         return mapper.toDto(bankCard);
+    }
+
+    @Transactional(readOnly = true)
+    public BankCard getBankCardOrThrow(Long userId) {
+        return repository.findBankCardByCreatorId(userId)
+                .orElseThrow(() -> new BankCardNotFouldException(
+                        String.format("Bank card not found for userId = %s", userId))
+                );
     }
 }

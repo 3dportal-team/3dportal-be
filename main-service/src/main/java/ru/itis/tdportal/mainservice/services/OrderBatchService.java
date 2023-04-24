@@ -67,7 +67,9 @@ public class OrderBatchService {
                 PaymentStatus.CREATED,
                 String.format("Платеж по заказу %s", dto.getUuid()),
                 orderBatchDto.getPrice(),
-                false
+                false,
+                orderBatchDto.getOrderBatchItems().stream().findFirst()
+                        .get().getReceiverId() // FIXME: 24.04.2023
         );
         client.createPayment(createdOrderBatch.getUuid(), paymentDto);
 

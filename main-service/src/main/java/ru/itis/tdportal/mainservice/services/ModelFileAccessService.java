@@ -38,7 +38,7 @@ public class ModelFileAccessService {
     }
 
     @Transactional(readOnly = true)
-    protected Optional<ModelFileAccess> getModelFileAccessByModelIdAndUserId(Long modelId, Long userId) {
+    public Optional<ModelFileAccess> getModelFileAccessByModelIdAndUserId(Long modelId, Long userId) {
         return repository.findByModelFile_IdAndUser_Id(modelId, userId);
     }
 }
