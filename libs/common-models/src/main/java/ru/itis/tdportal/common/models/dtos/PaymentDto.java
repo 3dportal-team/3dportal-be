@@ -18,5 +18,5 @@ public class PaymentDto {
 
     private Boolean paid;
 
-    private Long receiverId;
+    private Long receiverId; // FIXME: 24.04.2023
 }

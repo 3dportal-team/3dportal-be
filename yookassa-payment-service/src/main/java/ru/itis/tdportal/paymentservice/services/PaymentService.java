@@ -1,6 +1,6 @@
 package ru.itis.tdportal.paymentservice.services;
 
-import liquibase.pro.packaged.P;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +11,10 @@ import ru.itis.tdportal.common.models.dtos.MoneyDto;
 import ru.itis.tdportal.common.models.dtos.PaymentDto;
 import ru.itis.tdportal.common.models.entities.Money;
 import ru.itis.tdportal.common.models.enums.PaymentStatus;
-import ru.itis.tdportal.paymentservice.dtos.*;
+import ru.itis.tdportal.paymentservice.dtos.CreatedPaymentDto;
+import ru.itis.tdportal.paymentservice.dtos.EventObjectDto;
+import ru.itis.tdportal.paymentservice.dtos.PayoutDto;
+import ru.itis.tdportal.paymentservice.dtos.YookassaNotificationDto;
 import ru.itis.tdportal.paymentservice.models.entities.BankCard;
 import ru.itis.tdportal.paymentservice.models.entities.Payment;
 import ru.itis.tdportal.paymentservice.models.enums.ConfirmationType;
@@ -19,6 +22,7 @@ import ru.itis.tdportal.paymentservice.models.exceptions.PaymentNotFoundExceptio
 import ru.itis.tdportal.paymentservice.models.mappers.PaymentMapper;
 import ru.itis.tdportal.paymentservice.repositories.PaymentRepository;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -76,8 +80,8 @@ public class PaymentService {
 
         // TODO: убрать хардкод
         dto.setConfirmation(Map.of(
-                "return_url", returnUrl,
-                "type", ConfirmationType.REDIRECT.getValue()
+                        "return_url", returnUrl,
+                        "type", ConfirmationType.REDIRECT.getValue()
                 )
         );
 
@@ -111,7 +115,7 @@ public class PaymentService {
                 payoutDto.setPayoutToken(payment.getBankCard().getPayoutToken());
 
                 Money paymentAmount = payment.getAmount();
-                payoutDto.setAmount(new MoneyDto(paymentAmount.getValue(), paymentAmount.getCurrency()));
+                payoutDto.setAmount(new MoneyDto(new BigDecimal(paymentAmount.getValue()).setScale(2), paymentAmount.getCurrency()));
                 payoutDto.setDescription(String.format("Выплата по заказу %s", payment.getIdempotenceKey()));
 
                 payoutService.createPayout(payoutDto, payment.getIdempotenceKey());

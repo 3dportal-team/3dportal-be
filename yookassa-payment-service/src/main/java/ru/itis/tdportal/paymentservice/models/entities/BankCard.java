@@ -17,7 +17,7 @@ public class BankCard extends Audit<Long> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonProperty("card_type")
+    @Column(name = "card_type")
     private String cardType;
     private String first6;
 

@@ -8,6 +8,8 @@ import ru.itis.tdportal.mainservice.dtos.OrderBatchDto;
 import ru.itis.tdportal.mainservice.models.entities.OrderBatch;
 import ru.itis.tdportal.mainservice.models.entities.OrderBatchItemID;
 
+import java.math.BigDecimal;
+
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
         uses = {OrderBatchItemMapper.class, MoneyMapper.class})
 public interface OrderBatchMapper {
@@ -19,9 +21,9 @@ public interface OrderBatchMapper {
     @BeforeMapping
     default void setPrice(OrderBatchDto source) {
         Double sum = source.getOrderBatchItems().stream()
-                .mapToDouble(item -> item.getPrice().getValue())
+                .mapToDouble(item -> item.getPrice().getValue().doubleValue())
                 .sum();
-        source.setPrice(new MoneyDto(sum, Currency.RUB));
+        source.setPrice(new MoneyDto(new BigDecimal(sum), Currency.RUB));
     }
 
     @AfterMapping
