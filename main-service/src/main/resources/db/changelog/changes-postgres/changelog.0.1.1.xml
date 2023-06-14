@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="1" author="Diana.Monzhosova">
+        <createTable tableName="profile" remarks="Профиль">
+            <column name="id" type="BIGINT" autoIncrement="true" remarks="Идентификатор">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_object"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="Diana.Monzhosova">
+        <createTable tableName="portal_user" remarks="Пользователь">
+            <column name="id" type="BIGINT" autoIncrement="true" remarks="Идентификатор">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_portal_user"/>
+            </column>
+            <column name="email" type="VARCHAR(100)" remarks="Электронная почта"/>
+            <column name="hash_password" type="VARCHAR(100)" remarks="Пароль"/>
+            <column name="profile_id" type="BIGINT" remarks="Идентификатор профиля">
+                <constraints foreignKeyName="fk_portal_user_profile_id" references="profile(id)"/>
+            </column>
+            <column name="user_role" type="INTEGER" remarks="Роль"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="Diana.Monzhosova">
+        <createTable tableName="api_key" remarks="Ключ доступа к API">
+            <column name="id" type="BIGINT" autoIncrement="true" remarks="Идентификатор">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_api_key"/>
+            </column>
+            <column name="value" type="VARCHAR(255)" remarks="Значение ключа"/>
+            <column name="user_id" type="BIGINT" remarks="Идентификатор пользователя (владелец ключа)">
+                <constraints foreignKeyName="fk_api_key_user_id" references="portal_user(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4" author="Diana.Monzhosova">
+        <createTable tableName="instrument" remarks="Инструмент">
+            <column name="id" type="BIGINT" autoIncrement="true" remarks="Идентификатор">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_instrument"/>
+            </column>
+            <column name="name" type="VARCHAR(50)" remarks="Название"/>
+            <column name="description" type="text" remarks="Описание"/>
+            <column name="host_url" type="VARCHAR(2083)" remarks="URL"/>
+            <column name="author_id" type="BIGINT" remarks="Идентификатор пользователя">
+                <constraints foreignKeyName="fk_instrument_user_id" references="portal_user(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="5" author="Diana.Monzhosova">
+        <createTable tableName="model_file" remarks="Файл модели">
+            <column name="id" type="BIGINT" autoIncrement="true" remarks="Идентификатор">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_model_file"/>
+            </column>
+            <column name="given_name" type="VARCHAR(255)" remarks="Заданное название"/>
+            <column name="description" type="text" remarks="Описание"/>
+            <column name="original_file_name" type="VARCHAR(255)" remarks="Оригинальное название"/>
+            <column name="generated_name" type="VARCHAR(255)" remarks="Сгенерированное название"/>
+            <column name="entity_tag" type="VARCHAR(50)" remarks="Тэг сущности"/>
+            <column name="mime_type" type="VARCHAR(70)" remarks="Mime Type"/>
+            <column name="encoded_image" type="VARCHAR(150000)" remarks="URL предпросмотра"/>
+            <column name="user_id" type="BIGINT" remarks="Идентификатор пользователя">
+                <constraints foreignKeyName="fk_model_file_user_id" references="portal_user(id)"/>
+            </column>
+            <column name="upload_date" type="BIGINT"/>
+            <column name="last_modified" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,45 @@
+debug: ${SPRING_DEBUG:false}
+server:
+  port: ${PAYMENT_SERVICE_HTTPS_PORT:8443}
+  forward-headers-strategy: framework
+  ssl:
+    enabled: true
+    key-alias: 3dportal
+    // TODO: переместить в  отдельный docker volume
+    key-store: classpath:keystore/3dportal.p12
+    key-store-type: PKCS12
+    key-store-password: ${PAYMENT_SERVICE_SSL_KEYSTORE_PASSWORD}
+  http:
+    port: ${PAYMENT_SERVICE_PORT:8082}
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+    url: ${POSTGRES_URL}?currentSchema=${POSTGRES_PAYMENT_SCHEMA}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    liquibase:
+      enabled: true
+      change-log: classpath:db/changelog/db.changelog-master-postgres.xml
+      default-schema: ${POSTGRES_PAYMENT_SCHEMA:payment_service_schema}
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+yookassa:
+  api:
+    uri: ${YOOKASSA_API_URI:https://api.yookassa.ru/v3}
+    shop:
+      id: ${YOOKASSA_SHOP_ID}
+      secret-key: ${YOOKASSA_SHOP_SECRET_KEY}
+    agent:
+      id: ${YOOKASSA_AGENT_ID}
+      secret-key: ${YOOKASSA_AGENT_SECRET_KEY}
+  return-url: ${YOOKASSA_RETURN_URL}
+
+services:
+  main-service:
+    url: http://${MAIN_SERVICE_HOST}:${MAIN_SERVICE_PORT}/internal
+  payment-service:
+    url: http://${PAYMENT_SERVICE_HOST}:${PAYMENT_SERVICE_PORT}/internal

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="1" author="Diana.Monzhosova">
+        <createTable tableName="bank_card" remarks="Банковская карта">
+            <column name="id" type="BIGINT" autoIncrement="true" remarks="Идентификатор">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_bank_card"/>
+            </column>
+            <column name="card_type" type="VARCHAR(20)" remarks="Наименование платежной системы"/>
+            <column name="first6" type="VARCHAR(6)" remarks="Первые шесть цифр номера карты"/>
+            <column name="last4" type="VARCHAR(4)" remarks="Последние четыре цифры номера карты"/>
+            <column name="issuer_country" type="VARCHAR(2)" remarks="Код страны, в которой выпущена карта"/>
+            <column name="payout_token" type="VARCHAR(38)" remarks="Идентификатор карты в системе ЮКасса"/>
+            <column name="issuer_name" type="VARCHAR(50)" remarks="Наименование эмитента, выпустившего карту"/>
+            <column name="created_at" type="datetime" remarks="Время создания"/>
+            <column name="last_modified_at" type="datetime" remarks="Время последнего редактирования"/>
+            <column name="last_modifier_id" type="bigint" remarks="Идентификатор пользователя, редактировавшего данные банковской карты последним"/>
+            <column name="creator_id" type="bigint" remarks="Идентификатор пользователя, создавшего банковскую карту"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
